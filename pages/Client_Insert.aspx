@@ -262,7 +262,7 @@
 
         $(document).ready(function () {
 
-            $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
+            $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: -30 });
 
             $('#cbIsOw').change(function () {
                 if (this.checked) {

@@ -1,4 +1,4 @@
-﻿function Client(data) {
+﻿    function Client(data) {
     this.PNR = ko.observable(data.PNR);
     this.names = ko.observable(data.names);
     this.PAX = ko.observable(data.PAX);
@@ -417,7 +417,7 @@ function SaleViewModel(data) {
         self.feedback_trans('');
         var _url = url_sales + "/getSales/" + '/' + self.agency_fk() + '/' + self.PNR() + "/transport";
         $.getJSON(_url, function (allData) {
-
+            debugger;
             self.trans_ID(allData[0].ID);
             self.trans_product_fk(allData[0].product_fk.toString());
             self.trans_comments(allData[0].comments);

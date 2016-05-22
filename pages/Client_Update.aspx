@@ -565,7 +565,7 @@
         var dataTable;
         var search = '<%=Search%>';
         $(document).ready(function () {
-
+            my.viewModel.search_term_filter(search);
 
             $('[data-toggle="tooltip"]').tooltip()
             // $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });

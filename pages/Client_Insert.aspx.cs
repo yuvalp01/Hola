@@ -6,8 +6,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Net.Http;
 
-
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 
 public partial class pages_Client_Insert : System.Web.UI.Page
