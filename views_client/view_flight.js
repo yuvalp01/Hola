@@ -42,6 +42,7 @@ function FlightViewModel(data) {
             return new Flight(item);
         });
         self.flights(mappedData);
+        $('#trLoading').hide();
     });
 
 

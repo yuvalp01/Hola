@@ -16,6 +16,30 @@ var url_tour_plan = api_url +  '/api/tourplan';
 
 
 
+//update = function (item, new_val, _url) {
+//    var plan = item;
+//    var new_time = this.time();
+//    if (new_val) {
+//        var _url = url_departures + '/UpdatePlan';
+//        $.ajax({
+//            method: "PUT",
+//            url: _url,
+//            data: item,
+//            dataType: "json",
+//        }).done(function (result) {
+//            plan.editable(false);
+//            $('#lnk_sort').show();
+//        });
+//    }
+//    else {
+//        //TODO: requeired
+//        //alert('error');
+//    }
+//}
+
+
+
+
 // Common functions:
 
 Date.prototype.yyyymmdd = function () {
@@ -26,10 +50,40 @@ Date.prototype.yyyymmdd = function () {
 };
 
 
+
+function isValidContainer(container_Id) {
+    var isValid = true;
+    var fg = $("#" + container_Id + " .form-group ");
+    $(fg).removeClass("has-error");
+    var inputs = $('input, select', fg);
+    for (var i = 0; i < inputs.length; i++) {
+        if (!inputs[i].validity.valid) {
+            isValid = false;
+            $(inputs[i]).closest(".form-group").addClass("has-error");
+        }
+    }
+    if (isValid) {
+        return true;
+    }
+    else {
+        return false
+    }
+}
+
+//var container = $('#' + container_Id);
+//var xxx = $(".form-group > input", container);
+//var yyy = $( container, ".form-group > input");
+////var inputs = $(".form-group > input");
+//var fg_ = $("#modal_sale .form-group ");
+//$(".form-group").removeClass("has-error");
+//var inputs = $(".form-group input[type='text'],.form-group input[type='tel'],.form-group input[type='radio'],.form-group input[type='time'], .form-group input[type='number'], .form-group select");
+
+
+
 function isValid() {
     var isValid = true;
     $(".form-group").removeClass("has-error");
-    var inputs = $(".form-group input[type='text'],.form-group input[type='tel'],.form-group input[type='radio'],.form-group input[type='time'], .form-group select");
+    var inputs = $(".form-group input[type='text'],.form-group input[type='tel'],.form-group input[type='radio'],.form-group input[type='time'], .form-group input[type='number'], .form-group select");
 
     for (var i = 0; i < inputs.length; i++) {
         if (!inputs[i].validity.valid) {

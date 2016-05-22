@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Insert a New Client" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="Client_Insert.aspx.cs" Inherits="pages_Client_Insert" %>
+﻿<%@ Page Title="Insert a New Reservation" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="Client_Insert.aspx.cs" Inherits="pages_Client_Insert" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -25,7 +25,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><i class="fa fa-plus-circle fa-fw"></i>Insert a New Client</h1>
+            <h1 class="page-header"><i class="fa fa-plus-circle fa-fw"></i>Insert a New Reservation</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -36,8 +36,6 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-8" style="padding-left: 0px;">
-
-
                                 <div class="col-lg-12">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
@@ -184,7 +182,7 @@
                                     <div class="form-group">
                                         <label>Comments</label>
                                         
-                                        <textarea data-bind="text: comments" id="txtComments" form="form_client" class="form-control">
+                                        <textarea  data-bind="text: comments" id="txtComments" form="form_client" class="form-control">
                                         </textarea>
                                     </div>
                                     <div class="form-group">
@@ -217,7 +215,7 @@
                                         </div>
                                         <div id="message_success" style="display: none" class="alert alert-success alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            The client: <b id="new_pnr" data-bind="text: names"></b>  was successfuly added.  <a data-bind="    attr: { href: 'Client_Sales.aspx?search=' + PNR() }" href="Client_Sales.aspx" target="_blank" class="alert-link">Click here to add service</a>.
+                                            The client: <b id="new_pnr" data-bind="text: names"></b>  was successfuly added.  <a data-bind="    attr: { href: 'Client_Update.aspx?search=' + PNR() }" href="Client_Sales.aspx" target="_blank" class="alert-link">Click here to add service</a>.
                            
                                         </div>
                                         <div id="message_warning" style="display: none" class="alert alert-warning alert-dismissable">
@@ -257,7 +255,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="FooterScripts" runat="Server">
 
 
-    <script src="../views_client/view_insert_client.js"></script>
+    <script src="../views_client/view_client_insert.js"></script>
 
 
     <script type="text/javascript">

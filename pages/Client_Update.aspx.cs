@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class pages_Client_Sales : System.Web.UI.Page
+public partial class pages_Client_Update : System.Web.UI.Page
 {
     public string Search { get; set; }
     protected void Page_Load(object sender, EventArgs e)

@@ -1,21 +1,33 @@
 ﻿
-var _url_tour_products = url_products +'?types=tour,other';
+var _url_tour_products = url_products + '?types=tour,other';
 
 function TourPlan(data) {
 
     this.ID = ko.observable(data.ID);
     var d = new Date(data.date);
     this.date = ko.observable(d.yyyymmdd());
-    this.time = ko.observable(data.time);
+    var t = data.time;
+    this.time = ko.observable(t.HHmm());
     this.tour_fk = ko.observable(data.tour_fk);
     this.tour_name = ko.observable(data.tour_name);
+
     this.guide_fk = ko.observable(data.guide_fk);
+    //this.guide_name = ko.computed(function () {
+
+    //    return ko.utils.arrayFirst(self.guides(), function (guide) {
+    //        return (guide.ID === id).name;
+    //    });
+
+    //   // return this.guide_fk() + "_test";
+    //}, this);
+
     this.guide_name = ko.observable(data.guide_name);
     this.comments = ko.observable(data.comments);
     var d_u = new Date(data.date_update);
     this.date_update = ko.observable(d_u.yyyymmdd());
-
-
+    this.editable = ko.observable(false);
+    this.editBtnClass = ko.observable('btn btn-circle btn-info');
+    this.editBtnText = ko.observable('Edit');
 }
 
 function Product(data) {
@@ -56,6 +68,7 @@ function AppViewModel(data) {
         var mappedData = $.map(allData, function (item) {
             return new TourPlan(item);
         });
+        $('#trLoading').hide();
         self.tours(mappedData);
     });
 
@@ -113,28 +126,76 @@ function AppViewModel(data) {
         }
     };
 
-    self.remove_server = function (tour) {
+    self.edit_mode = function () {
+        if (this.editable()) {
 
+            self.UpdatePlan(this);
+            this.editBtnClass('btn btn-circle btn-info');
+            this.editBtnText('Edit');
+            this.editable(false);
+        }
+        else {
+            this.editBtnClass('btn btn-circle btn-primary');
+            this.editBtnText('Save');
+            this.editable(true);
+        }
+    };
+
+    self.UpdatePlan = function (item) {
+
+        var _url = url_tour_plan + '/UpdatePlan/';
         $.ajax({
-            url: url_tour_plan + '/' + tour.ID(),
-            type: 'DELETE',
-        }).done(function () {
-            self.tours.remove(tour)
+            method: "PUT",
+            url: _url,
+            data: item,
+            dataType: "json",
+        }).done(function (result) {
+
+            var guide_fk = item.guide_fk();
+            var match = ko.utils.arrayFirst(self.guides(), function (guide) {
+                return guide.ID() === guide_fk;
+            });
+            item.editable(false);
+            item.guide_name(match.name());
+            //self.feedback_sale('');
         }).fail(function (error) {
-            alert("error");
+            // self.feedback_sale(error.responseText)
+            alert(error);
         });
+    }
+
+
+
+
+    self.CancelPlan = function () {
+
+        if (confirm('Are you sure you want to delete this row?')) {
+            var item = this;
+            var _url = url_tour_plan + '/CancelPlan/' + this.ID();
+            $.ajax({
+                method: "PUT",
+                url: _url,
+                //data: item,
+                dataType: "json",
+            }).done(function (result) {
+                self.tours.remove(item);
+                //self.feedback_sale('');
+            }).fail(function (error) {
+                alert(error.responseText);
+                // self.feedback_sale(error.responseText);
+            })
+        }
     }
 }
 
 // Activates knockout.js
 ko.applyBindings(new AppViewModel());
 
-
-Date.prototype.yyyymmdd = function () {
-    var yyyy = this.getFullYear().toString();
-    var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-    var dd = this.getDate().toString();
-    return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]); // padding
+String.prototype.HHmm = function () {
+    var array = this.split(':');
+    var HH = array[0];
+    var mm = array[1];
+    return (HH[1] ? HH : "0" + HH[0]) + ':' + (mm[1] ? mm : "0" + mm[0]); // padding
 };
 
 

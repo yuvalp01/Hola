@@ -218,16 +218,16 @@ var NewClientViewModel = function () {
 
 
 
-            console.log('yuv: before post');
+            //console.log('yuv: before post');
             $.post(url_clients, new_obj)
             .done(function (obj_from_server) {
-                console.log('yuv: post done');
+                //console.log('yuv: post done');
                 popMessage('success');
                 document.getElementById("form_client").reset();
                 $('#txtComments').text('');
             })
             .fail(function (error) {
-                console.log('yuv: post fail');
+                //console.log('yuv: post fail');
                 popMessage('danger', error.responseText);
             });
 

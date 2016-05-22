@@ -1,8 +1,18 @@
-﻿
-var col_date_arr = 5;
-var col_date_dep = 7;
-var col_hotel = 8;
-var col_agency = 9;
+﻿//var col_names = 2;
+//var col_date_arr = 5;
+//var col_date_dep = 7;
+//var col_hotel = 8;
+//var col_agency = 9;
+
+var col_names = 1;
+var col_date_arr = 4;
+var col_date_dep = 6;
+var col_hotel = 7;
+var col_agency = 8;
+var col_phone = 9;
+
+
+
 
 function Agency(data) {
     this.ID = ko.observable(data.ID);
@@ -105,28 +115,6 @@ function SaleViewModel(data) {
         dataTable.column(col_agency).search(_new).draw();
     });
 
-
-    //// Operations
-    //self.add = function () {
-
-
-    //    _sale = {
-    //        PNR: self.PNR(),
-    //        product_fk: self.product_fk(),
-    //        sale_type: self.sale_type(),
-    //        persons: self.persons()
-    //    };
-
-    //    $.post(url_sales, _sale, function (sale_from_server) {
-    //        self.sales.push(new Sale(_sale));
-    //        self.product_fk('');
-    //        self.persons(self.persons_max());
-    //        self.show_table();
-
-
-
-    //    });
-    //};
 
     self.remove_server = function (hotel) {
     }

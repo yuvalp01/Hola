@@ -64,6 +64,10 @@
                 <th>Time</th>
                 <th>Destination</th>
             </tr>
+            <tr id="trLoading" style="display: inline-grid">
+                <td colspan="7" style="text-align: center;">Loading...</td>
+
+            </tr>
         </thead>
         <tbody data-bind="foreach: flights">
             <tr>
