@@ -31,7 +31,7 @@
             <div class="form-group">
                 <label class="control-label">Choose agency*</label>
 
-                <asp:DropDownList ID="ddlAgencies" DataValueField="ID" ClientIDMode="Static" DataTextField="name" runat="server" required="required" class="form-control">
+                <asp:DropDownList ID="ddlAgencies" DataValueField="ID" ClientIDMode="Static" DataTextField="name" runat="server" required="required" CssClass="form-control">
                 </asp:DropDownList>
 
             </div>
@@ -51,7 +51,7 @@
 
             </div>
         </div>
-
+         
 
         <div>
         </div>
@@ -63,8 +63,10 @@
                     <ItemTemplate>
                         <asp:Button ID="btnInsert" runat="server" CssClass="form-control btn btn-primary" CausesValidation="false" CommandName="InsertClient"
                             Text="Insert"
-                            CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("PAX")+ "~" +Eval("num_arr")+ "~" +Eval("date_arr")+ "~" +Eval("num_dep")+ "~" +Eval("date_dep")+ "~" +Eval("phone") + "~" +Eval("comments") %>' />
-                    </ItemTemplate>
+                            CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("phone")+ "~" +Eval("date_arr")+ "~" +Eval("num_arr")+ "~" +Eval("PAX")+ "~" +Eval("date_dep")+ "~" +Eval("num_dep") + "~" +Eval("comments") %>' />
+<%--                            CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("PAX")+ "~" +Eval("num_arr")+ "~" +Eval("date_arr")+ "~" +Eval("num_dep")+ "~" +Eval("date_dep")+ "~" +Eval("phone") + "~" +Eval("comments") %>' />--%>
+                   
+                         </ItemTemplate>
                 </asp:TemplateField>
 
 
