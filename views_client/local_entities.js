@@ -43,7 +43,7 @@ function TourPlan(data) {
     this.date = ko.observable(d.yyyymmdd());
     this.date = Date(data.date).yyyymmdd();
     this.time = ko.observable(data.time);
-    this.tour_fk = ko.observable(data.tour_fk);
+    this.product_fk = ko.observable(data.product_fk);
     this.guide_fk = ko.observable(data.guide_fk);
     this.comments = ko.observable(data.comments);
     var d_u = new Date(data.date_update);

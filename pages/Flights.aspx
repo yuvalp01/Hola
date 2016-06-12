@@ -1,6 +1,11 @@
 ﻿<%@ Page Title="Flights" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="Flights.aspx.cs" Inherits="pages_Flights" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <style>
+        .form-control-feedback {
+            width: 70px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="row">
@@ -15,16 +20,39 @@
 
     <div class="panel-body">
 
+
+<%--        <form class="form-horizontal">
+            form-inline
+            <div class="form-group has-success has-feedback">
+                <label class="control-label col-sm-3" for="inputSuccess3">Input with success</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputSuccess3" />
+                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                </div>
+            </div>
+            <div class="form-group   has-feedback">
+                <label class="control-label col-sm-3" for="inputSuccess3">Flight #</label>
+                <div class="col-sm-9">
+                    <input type="text" id="inputSuccess4" class="form-control" />
+                    <span class="glyphicon  glyphicon-warning-sign  form-control-feedback"></span>glyphicon-ok || glyphicon-warning-sign ||glyphicon-remove  
+                </div>
+            </div>
+        </form>--%>
+
+
         <div class="form-group">
             <label class="col-sm-2 control-label">Flight #</label>
             <div class="col-sm-10">
                 <input type="text" required="required" class="form-control" data-bind="value: new_num" placeholder="e.g. VY7844" />
+
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group has-feedback">
             <label class="col-sm-2 control-label">Date</label>
             <div class="col-sm-10">
                 <input type="text" required="required" class="form-control date" data-bind="value: new_date" placeholder="Date" />
+                <span class="glyphicon  form-control-feedback" title="Please use only the format yyyy-MM-dd"></span>
+
             </div>
 
         </div>
@@ -54,6 +82,7 @@
                 <button type="button" data-bind="click: add_server" class="btn btn-primary">Submit</button>
             </div>
         </div>
+
     </div>
 
     <table class="table table-striped table-bordered table-hover" id="tbl">
@@ -88,6 +117,7 @@
 
         $(document).ready(function () {
             $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
+
         });
     </script>
 </asp:Content>

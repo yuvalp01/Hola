@@ -8,7 +8,7 @@ function TourPlan(data) {
     this.date = ko.observable(d.yyyymmdd());
     var t = data.time;
     this.time = ko.observable(t.HHmm());
-    this.tour_fk = ko.observable(data.tour_fk);
+    this.product_fk = ko.observable(data.product_fk);
     this.tour_name = ko.observable(data.tour_name);
 
     this.guide_fk = ko.observable(data.guide_fk);
@@ -95,7 +95,7 @@ function AppViewModel(data) {
                 ID: self.new_ID(),
                 date: self.new_date(),
                 time: self.new_time(),
-                tour_fk: self.new_tour_fk(),
+                product_fk: self.new_tour_fk(),
                 guide_fk: self.new_guide_fk(),
                 comments: self.new_comments(),
 

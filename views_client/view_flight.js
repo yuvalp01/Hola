@@ -62,15 +62,18 @@ function FlightViewModel(data) {
 
     //Operations
     self.add_server = function () {
+
         if (isValid()) {
+            var d = new Date( self.new_date());
             var new_obj = {
                 num: self.new_num(),
-                date: self.new_date(),
+                date: d.yyyymmdd(),
                 time: self.new_time(),
                 destination: self.new_destination(),
                 direction: self.new_direction(),
 
             };
+
             $.post(url_flights, new_obj, function (obj_from_server) {
                 new_obj.ID = obj_from_server.ID;
                 self_list.unshift(new_obj);

@@ -1,4 +1,4 @@
-﻿    function Client(data) {
+﻿function Client(data) {
     this.PNR = ko.observable(data.PNR);
     this.names = ko.observable(data.names);
     this.PAX = ko.observable(data.PAX);
@@ -57,11 +57,10 @@ function Sale(data, isEditMode) {
     this.product_name = ko.observable(data.product_name);
 
     this.persons = ko.observable(data.persons);
-    this.price = ko.observable(data.price);
+    this.remained_pay = ko.observable(data.remained_pay);
     this.sale_type = ko.observable(data.sale_type);
     this.date_sale = ko.observable(data.date_sale);
     this.date_update = ko.observable(data.date_update);
-    this.paid = ko.observable(data.paid);
     this.comments = ko.observable(data.comments);
     this.editable = ko.observable(isEditMode);
     this.editBtnClass = ko.observable('btn btn-circle btn-info');
@@ -84,11 +83,7 @@ function SaleViewModel(data) {
     self.hotels = ko.observableArray([]);
     self.flights = ko.observableArray([]);
 
-
     self.clients_filter = ko.observableArray([]);
-
-
-
 
     //fields - common
     self.PNR = ko.observable();
@@ -96,10 +91,12 @@ function SaleViewModel(data) {
     self.agency_fk = ko.observable();
     self.product_fk = ko.observable();
 
+    self.rate = ko.observable();
+
+
 
 
     //fields - client 
-
     self.hotel_fk = ko.observable();
     self.PAX = ko.observable();
     self.phone = ko.observable();
@@ -113,14 +110,14 @@ function SaleViewModel(data) {
     //field - transportation
     self.trans_product_fk = ko.observable('1');
     self.trans_comments = ko.observable();
-    self.trans_price = ko.observable();
+    self.trans_remained_pay = ko.observable();
     self.trans_ID = ko.observable();
 
     //fileds - sale
-    self.sale_type = ko.observable('BIZ');
+    self.sale_type = ko.observable();
     self.sale_comments = ko.observable();
-    self.price = ko.observable();
-    //self.product_type = ko.observable();
+
+
     self.persons = ko.observable();
     self.persons_max = ko.observable();
     self.feedback_sale = ko.observable();
@@ -132,7 +129,34 @@ function SaleViewModel(data) {
     self.date_dep_filter = ko.observable();
     self.search_term_filter = ko.observable();
 
+    self.remained_pay = ko.observable();
+    self.calc_total = ko.computed({
 
+        read: function () {
+            if (self.sale_type() == 'BIZ') {
+                self.remained_pay(0);
+                return 0;
+            }
+            else {
+                if (!self.product_fk()) {
+                    self.remained_pay('');
+                    return '';
+                }
+                else {
+                    var _calc = self.persons() * self.rate();
+                    self.calc_total(_calc);
+                    return _calc;
+
+                }
+            }
+        },
+        write: function (value) {
+            console.log(value);
+            self.remained_pay(value);
+            return value;
+        },
+        owner: this
+    });
 
     //UX
     self.editBtnClass = ko.observable('btn btn-circle btn-info');
@@ -140,7 +164,6 @@ function SaleViewModel(data) {
 
 
     //flights arrival + date filter:
-
     self.clients_filter = ko.computed(function () {
         return ko.utils.arrayFilter(self.clients(), function (client) {
             var agency_fk_filter = self.agency_fk_filter();
@@ -297,7 +320,10 @@ function SaleViewModel(data) {
             return item.ID() === _new;
         });
         if (match) {
-            self.price(match.rate());
+            self.rate(match.rate());
+        }
+        else {
+            self.rate('');
         }
     });
 
@@ -305,7 +331,7 @@ function SaleViewModel(data) {
 
     self.load_sales = function () {
         self.feedback_sale('');
-        var _url = url_sales + "/getSales/"+self.agency_fk()+'/' + self.PNR() + "/tour,other";
+        var _url = url_sales + "/getSales/" + self.agency_fk() + '/' + self.PNR() + "/tour,other";
         $.getJSON(_url, function (allData) {
             var mappedData = $.map(allData, function (item) {
                 return new Sale(item);
@@ -322,7 +348,7 @@ function SaleViewModel(data) {
                 return item.product_fk() === self.product_fk();
             });
 
-            if (match_product && match_product.product_fk()!='100') {
+            if (match_product && match_product.product_fk() != '100') {
                 self.feedback_sale('Product already exists');
                 return;
             }
@@ -334,7 +360,7 @@ function SaleViewModel(data) {
                 sale_type: self.sale_type(),
                 persons: self.persons(),
                 comments: self.sale_comments(),
-                price: self.price(),
+                remained_pay: self.remained_pay(),
             };
 
             $.post(url_sales, _sale, function (sale_from_server) {
@@ -342,7 +368,7 @@ function SaleViewModel(data) {
                 self.product_fk('');
                 self.persons(self.persons_max());
                 self.sale_comments('');
-                self.price('');
+                //self.remained_pay('');
                 self.load_sales();
 
             }).done(function (result) {
@@ -357,8 +383,6 @@ function SaleViewModel(data) {
 
     self.edit_mode = function () {
         if (this.editable()) {
-            //self.updatePrice(this);
-            //self.UpdateSale('price', this);
             self.UpdateSale(this);
             this.editBtnClass('btn btn-circle btn-info');
             this.editBtnText('Edit');
@@ -375,7 +399,7 @@ function SaleViewModel(data) {
 
     self.UpdateSale = function (item) {
 
-        var _url = url_sales + '/UpdateSale/'+ item.ID();
+        var _url = url_sales + '/UpdateSale/' + item.ID();
         $.ajax({
             method: "PUT",
             url: _url,
@@ -393,7 +417,7 @@ function SaleViewModel(data) {
 
         if (confirm('Are you sure you want to delete this sale?')) {
             var item = this;
-            var _url = url_sales + '/CancelSale/'+item.ID();
+            var _url = url_sales + '/CancelSale/' + item.ID();
             $.ajax({
                 method: "PUT",
                 url: _url,
@@ -409,31 +433,25 @@ function SaleViewModel(data) {
         }
     }
 
-
-
-
     self.load_trans = function () {
 
         self.feedback_trans('');
         var _url = url_sales + "/getSales/" + '/' + self.agency_fk() + '/' + self.PNR() + "/transport";
         $.getJSON(_url, function (allData) {
-            debugger;
             self.trans_ID(allData[0].ID);
             self.trans_product_fk(allData[0].product_fk.toString());
             self.trans_comments(allData[0].comments);
-            self.trans_price(allData[0].price);
+            self.trans_remained_pay(allData[0].remained_pay);
         });
 
     }
-
-
 
     self.update_transport = function () {
         var _sale = {
             PNR: self.PNR(),
             product_fk: self.trans_product_fk(),
             comments: self.trans_comments(),
-            price: self.trans_price(),
+            remained_pay: self.trans_remained_pay(),
         };
 
         var _url = url_sales + '/UpdateTransport/' + self.trans_ID();
@@ -453,15 +471,9 @@ function SaleViewModel(data) {
 
         var id = '#rb_' + _new;
         var rate = $(id).attr('data-rate');
-        self.trans_price(rate);
+        self.trans_remained_pay(rate);
 
     });
-
-
-
-
-
-
 
     var _last_pnr = '';
     self.load_client = function (client) {
@@ -505,7 +517,17 @@ function SaleViewModel(data) {
 
     });
 
+    self.sale_type.subscribe(function (_new) {
 
+        if (_new == "PRI") {
+            //$('#collapseExample').show('slow');
+            $('#divPayment').collapse('show');
+        }
+        else {
+            //$('#divPayment').hide('slow');
+            $('#divPayment').collapse('hide');
+        }
+    });
 
 
 
@@ -527,7 +549,7 @@ function SaleViewModel(data) {
                 hotel_fk: self.hotel_fk(),
             };
 
-            var _url = url_clients + '/UpdateClient/' +self.agency_fk()+'/'+self.PNR()+'';
+            var _url = url_clients + '/UpdateClient/' + self.agency_fk() + '/' + self.PNR() + '';
             $.ajax({
                 method: "PUT",
                 url: _url,
@@ -707,8 +729,8 @@ function SaleViewModel(data) {
 
 //self.updatePrice = function (item) {
 //    //var item = this;
-//    //var new_price = item.price();
-//    if (item.price()) {
+//    //var new_price = item.remained_pay();
+//    if (item.remained_pay()) {
 //        var _url = url_sales + '/UpdatePrice';
 //        $.ajax({
 //            method: "PUT",
@@ -722,7 +744,7 @@ function SaleViewModel(data) {
 //    else {
 
 //        alert('Please set a numeric value');
-//        item.price(0);
+//        item.remained_pay(0);
 //        //item.editBtnClass('btn btn-circle btn-primary');
 //        //item.editBtnText('Save');
 //        //item.editable(true);
@@ -754,7 +776,7 @@ function SaleViewModel(data) {
 //                    { "data": "product_name", },
 //                    { "data": "persons" },
 //                    { "data": "sale_type" },
-//                    { "data": "price" },
+//                    { "data": "remained_pay" },
 //                    { "data": "comments" },
 
 //                ],

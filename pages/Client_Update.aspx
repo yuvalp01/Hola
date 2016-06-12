@@ -111,6 +111,7 @@
 
                                                     <div class="form-group ">
                                                         <label class="control-label">PAX*</label>
+                                                        <%--TODO: to avoid zero use:  pattern="^[1-9]\d*$"  --%>
                                                         <input type="number" data-bind="value: PAX" style="width: 50px;" min="1" max="99" id="txtPAX" required="required" class="form-control" />
 
                                                     </div>
@@ -289,7 +290,7 @@
 
                                     <div class="form-group">
                                         <label class="control-label">Current Price</label>
-                                        <input class="form-control" type="number" style="width: 70px" data-bind="value: trans_price" min="0" step="1" />
+                                        <input class="form-control" type="number" style="width: 70px" data-bind="value: trans_remained_pay" min="0" step="1" />
                                     </div>
 
                                     <div class="form-group">
@@ -297,11 +298,11 @@
                                         <br />
                                         <textarea cols="30" class="form-control" data-bind="value: trans_comments"></textarea>
                                     </div>
-                                 
-                                        <div>
-                                            <span id="lblFeedback_trans" data-bind="text: feedback_trans" style="display: block; color: red" class="has-warning"></span>
-                                        </div>
-                                    
+
+                                    <div>
+                                        <span id="lblFeedback_trans" data-bind="text: feedback_trans" style="display: block; color: red" class="has-warning"></span>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -316,6 +317,23 @@
             </div>
         </div>
 
+        <%--                <button class="btn btn-primary" type="button" id="btntest">
+            test
+        </button>
+        
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Link with href
+        </a>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Button with data-target
+        </button>
+
+                <div class="btn btn-primary"  data-toggle="collapse" data-target="#collapseExample" >
+                                          <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Business - pre-order by agency">
+                                    <input type="radio" data-bind="checked: sale_type" value="BIZ" />BIZ</label>
+                                <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Private - order by the client">
+                                    <input type="radio" data-bind="checked: sale_type" value="PRI" />PRI</label>
+        </div>--%>
+
 
 
         <div id="modal_sale" class="modal fade" tabindex="-1" role="dialog">
@@ -326,9 +344,9 @@
                         <h4 class="modal-title"></h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-inline panel panel-default" style="padding: 5px">
+                        <form class="form-inline panel panel-default  well" style="padding: 5px;     margin-bottom: 0px;">
                             <div class="form-group">
-                                <label class="control-label">Service:</label>
+                                <label class="control-label">Tour:</label>
                                 <select id="ddlTours" required="required" class="form-control margin-bottom-14" style="display: inline; width: 200px" data-bind="
     options: products_tour,
     optionsText: 'name',
@@ -343,17 +361,27 @@
                                 <label class="control-label">People</label>
                                 <input type="number" style="width: 60px" class="form-control" data-bind="value: persons, attr: { max: persons_max }" min="1" id="txtP" />
                             </div>
-                            <div id="rblType" class="form-group">
+                            <div id="rblType"  class="form-group">
 
-                                <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Business - pre-order by agency">
-                                    <input type="radio" data-bind="checked: sale_type" value="BIZ" />BIZ</label>
-                                <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Private - order by the client">
-                                    <input type="radio" data-bind="checked: sale_type" value="PRI" />PRI</label>
+                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="Business - pre-order by agency">
+                                    <input type="radio" name="xxx" required data-bind="checked: sale_type" value="BIZ" />BIZ</label>
+                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="Private - order by the client">
+                                    <input type="radio" name="xxx" required  data-bind="checked: sale_type" value="PRI" />PRI</label>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label">Price per Person</label>
-                                <input type="number" step="any" required="required" style="width: 70px" class="form-control" data-bind="value: price" />
+
+                            <div id="divPayment" class="collapse" style="margin-top: 5px">
+                                <div class="form-group ">
+                                    <label class="control-label">Total Price:</label>
+                                    <input type="number" step="any" min="0" required="required" style="width: 70px" class="form-control" data-bind="value: calc_total" />
+
+                                    <span data-bind="visible: rate">Price per Person  <span data-bind="    text: rate" class="badge"></span></span>
+
+
+
+                                </div>
+
                             </div>
+
                             <div class="form-group">
 
                                 <textarea placeholder="Comments" style="width: 555px; margin-top: 5px; margin-bottom: -5px" data-bind="textInput: sale_comments" class="form-control"></textarea>
@@ -370,14 +398,18 @@
                         </form>
                     </div>
 
-                    <table id="tbl_sales" class="table table-striped table-bordered table-hover order-column compact" style="width: 98%; margin-left: 5px;">
+                    <div data-bind="visible: sales().length==0"  class="alert alert-info" role="alert" style="margin-left: 14px;
+    margin-right: 14px;">There are no tours reserved for this reservation</div>
+
+           
+                    <table data-bind="visible: sales().length>0" id="tbl_sales" class="table table-striped table-bordered table-hover order-column compact" style="width: 98%; margin-left: 5px;">
                         <thead>
                             <tr>
                                 <th>Service</th>
                                 <th>Persons</th>
                                 <th>Type</th>
-                                <th title="Price per Person">Price</th>
-                                <th style="width: 240px">Comments</th>
+                                <th style="width: 100px" title="Balance Remaining of the client to Hola Shalom">Remained</th>
+                                <th style="width: 200px">Comments</th>
                                 <th style="width: 100px"></th>
 
                             </tr>
@@ -388,17 +420,16 @@
                                 <td data-bind="text: product_name"></td>
                                 <td>
                                     <span data-bind="text: persons, visible: !(editable())"></span>
-                                    <input class="form-control" type="number" step="any" min="1" max="" data-bind="attr: {'max': $parent.PAX}, value: persons, visible: editable" style="width: 50px" />
+                                    <input class="form-control" type="number" step="any" min="1" max="" data-bind="attr: { 'max': $parent.PAX }, value: persons, visible: editable" style="width: 50px" />
 
                                 </td>
                                 <td data-bind="text: sale_type"></td>
                                 <td>
                                     <%--                                    visible: !(editable()),--%>
                                     <%--                                    <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>--%>
-                                    <span data-bind="text: price, visible: !(editable())"></span>
+                                    <span data-bind="text: remained_pay() + ' €', visible: !(editable())"></span>
                                     <%--, event: { blur: $parent.updatePrice }--%>
-                                    <input class="form-control" type="number" step="any" min="0" data-bind="value: price, visible: editable" style="width: 70px" />
-
+                                    <input class="form-control" type="number" step="any" min="0" data-bind="value: remained_pay, visible: editable" style="width: 70px" />
                                 </td>
                                 <td>
 
@@ -480,9 +511,9 @@
             <tbody data-bind="foreach: { data: clients_filter }">
                 <tr>
                     <td>
-                        <img class="edit" title="Edit Client" src="../icons/fa-pencil.png" />
-                        <img class="trans" title="Change Transportation" src="../icons/fa-train.png" />
-                        <img class="sale" title="Add Service" src="../icons/fa-plus-square.png" />
+                        <img class="edit" title="Edit Reservation" src="../icons/fa-pencil.png" />
+                        <img class="trans" title="Transportation" src="../icons/fa-train.png" />
+                        <img class="sale" title="Tours" src="../icons/tourguide.png" />
 
                     </td>
                     <td data-bind="text: PNR"></td>
@@ -498,18 +529,6 @@
 
         </table>
 
-        <%--        <table class="table table-striped table-bordered table-hover order-column compact" id="tblSearch">
-            <thead>
-                <tr>
-                    <th>Action</th>
-                    <th>PNR</th>
-                    <th>Names</th>
-                    <th>PAX</th>
-                    <th>Arrival Date</th>
-                    <th>Agency</th>
-                </tr>
-            </thead>
-        </table>--%>
     </div>
     <%--                                <div class="col-lg-6">
                                     <div class="input-group col-lg-12">
@@ -566,11 +585,15 @@
         var search = '<%=Search%>';
         $(document).ready(function () {
             my.viewModel.search_term_filter(search);
-
-            $('[data-toggle="tooltip"]').tooltip()
+ 
             // $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
             $(".date").datepicker({ dateFormat: 'yy-mm-dd' });
 
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'hover',
+                container: 'body'
+
+            });
 
 
             $('#cbIsOw').change(function () {
@@ -604,6 +627,7 @@
                 my.viewModel.agency_fk(client.agency_fk());
                 my.viewModel.persons(client.PAX());
                 my.viewModel.persons_max(client.PAX());
+                my.viewModel.sale_type('');
 
                 my.viewModel.load_sales();
                 $('.modal-title').text("[" + client.PNR() + "] " + client.names())

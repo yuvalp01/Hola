@@ -6,6 +6,7 @@ using System.Web;
 using Microsoft.VisualBasic.FileIO;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using HolaAPI.Models;
 
 public class Result
 {
@@ -50,10 +51,10 @@ public class CsvUpload
                         rowUpload.PNR = fieldData[0];
                         rowUpload.names = fieldData[1];
                         rowUpload.phone = fieldData[2];
-                        rowUpload.date_arr = fieldData[3];
+                        rowUpload.date_arr = Convert.ToDateTime( fieldData[3]);
                         rowUpload.num_arr = fieldData[4];
-                        rowUpload.PAX = fieldData[5];
-                        rowUpload.date_dep = fieldData[6];
+                        rowUpload.PAX = int.Parse( fieldData[5]);
+                        rowUpload.date_dep = Convert.ToDateTime(fieldData[6]);
                         rowUpload.num_dep = fieldData[7];
                         rowUpload.hotel_name = fieldData[8];
                         rowUpload.comments = fieldData[9];
@@ -67,7 +68,8 @@ public class CsvUpload
         }
         catch (Exception ex)
         {
-            string error = "There was a problem with the CSV file (internal error message: " + ex.Message + ")";
+            Exception rootEx = ex.GetBaseException();
+            string error = "There was a problem with the CSV file (internal error message: " + rootEx.Message + ")";
             Logger.Write(error);
             return error;
         }
@@ -115,6 +117,8 @@ public class CsvUpload
 
                 db.SaveChanges();
                 result.status = "success";
+                result.message = String.Format("[Reservation <b>'[{0}] {1}'</b> was successfully inserted into the database.", client_new.PNR, client_new.names);
+
             }
         }
         catch (DbUpdateException ex)
@@ -159,7 +163,7 @@ public class CsvUpload
     {
         //TODO: write logic
 
-        sale.price = 0;
+        sale.remained_pay = 0;
         sale.product_fk = 1;
     }
 

@@ -55,7 +55,7 @@
 
         <div>
         </div>
-        <asp:GridView ID="GridView1" CssClass="table table-striped table-bordered table-hover  order-column compact" Width="1400px" Style="table-layout: fixed;" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_OnRowCommand">
+        <asp:GridView ID="GridView1" AllowPaging="true" CssClass="table table-striped table-bordered table-hover  order-column compact" Width="1400px" Style="table-layout: fixed;" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_OnRowCommand">
             <Columns>
 
 

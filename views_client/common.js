@@ -80,9 +80,26 @@ function isValidContainer(container_Id) {
 
 
 
+
+
+
+function validateDateFormat(dateInput)
+{
+    var date_val = $(dateInput).val();
+    //var regEx = /^\d{4}-\d{1,2}-\d{1,2}$/;
+    var regEx = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
+
+    //var regEx = /^\d{4}-\d{2}-\d{2}$/;
+    return date_val.match(regEx) != null;
+
+
+}
+
 function isValid() {
     var isValid = true;
     $(".form-group").removeClass("has-error");
+    $(".form-control-feedback").removeClass("glyphicon-warning-sign");
+
     var inputs = $(".form-group input[type='text'],.form-group input[type='tel'],.form-group input[type='radio'],.form-group input[type='time'], .form-group input[type='number'], .form-group select");
 
     for (var i = 0; i < inputs.length; i++) {
@@ -92,6 +109,20 @@ function isValid() {
         }
     }
 
+    var dateInputs = $('.date');
+    for (var i = 0; i < dateInputs.length; i++) {
+        if (!validateDateFormat(dateInputs[i]) && dateInputs[i].validity.valid) {
+            isValid = false;
+            $(dateInputs[i]).closest(".form-group").addClass("has-error");
+            $(dateInputs[i]).next(".form-control-feedback").addClass("glyphicon-warning-sign");  
+        }
+    }
+
+
+    //if (validateDateFormat(dateInput)) {
+    //    isValid = false;
+    //    $(inputs[i]).closest(".form-group").addClass("has-error");
+    //}
 
     if (isValid) {
         return true;

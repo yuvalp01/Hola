@@ -135,9 +135,9 @@
                         <li>
                             <a href="TourPlan.aspx"><i class="fa fa-calendar fa-fw"></i>Tour Plan </a>
                         </li>
-                        <li>
+<%--                        <li>
                             <a href="Invoices.aspx"><i class="fa fa-euro fa-fw"></i>Invoices </a>
-                        </li>
+                        </li>--%>
 
 
                         <%--                        <li>
