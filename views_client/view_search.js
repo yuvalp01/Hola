@@ -60,7 +60,7 @@ function SaleViewModel(data) {
     self.date_dep = ko.observable();
     self.agency_fk = ko.observable();
     self.product_fk = ko.observable();
-    self.sale_type = ko.observable('BIZ');
+    self.sale_type = ko.observable('External');
 
     self.PNR = ko.observable();
     self.names = ko.observable();

@@ -1,11 +1,11 @@
 ﻿
-
-
 function Flight(data) {
     this.num = ko.observable(data.num);
     var _date = new Date(data.date).yyyymmdd();
     this.date = ko.observable(_date);
-    this.time = ko.observable(data.time);
+    var t = data.time;
+    this.time = ko.observable(t.HHmm());
+    //this.time = ko.observable(data.time);
     this.direction = ko.observable(data.direction);
 
     this.details = ko.dependentObservable(function () {
@@ -26,7 +26,18 @@ function Hotel(data) {
 }
 
 
-var NewClientViewModel = function () {
+function Product(data) {
+    this.ID = ko.observable(data.ID);
+    this.name = ko.observable(data.name);
+    this.rate = ko.observable(data.rate);
+    this.category = ko.observable(data.category);
+}
+
+
+
+
+
+var ReservationViewModel = function () {
 
 
     var self = this;
@@ -34,6 +45,8 @@ var NewClientViewModel = function () {
     self.agencies = ko.observableArray([]);
     self.hotels = ko.observableArray([]);
     self.flights = ko.observableArray([]);
+    self.products = ko.observableArray([]);
+
 
     //fields - input-text
     self.date_arr = ko.observable()
@@ -52,6 +65,7 @@ var NewClientViewModel = function () {
     self.agency_fk = ko.observable();
     self.hotel_fk = ko.observable();
 
+    self.trans_product_fk = ko.observable('1');
 
     ///AGENCY METHODS:///
     //get agencies from server:
@@ -91,6 +105,20 @@ var NewClientViewModel = function () {
     self.flights_filter_dep = ko.computed(function () {
         return ko.utils.arrayFilter(self.flights(), function (flight) {
             return flight.date() == self.date_dep() && flight.direction() == 'OUT';
+        });
+    });
+
+    //get products from server:
+    $.getJSON(url_products, function (allData) {
+        var mappedData = $.map(allData, function (item) {
+            return new Product(item);
+        });
+        self.products(mappedData);
+    });
+
+    self.products_trans = ko.computed(function () {
+        return ko.utils.arrayFilter(self.products(), function (product) {
+            return product.category() == 'transport';
         });
     });
 
@@ -153,7 +181,7 @@ var NewClientViewModel = function () {
         });
 
         var clone = $(div).clone().attr('id', '').show('fast');
-        if (html!= undefined) {
+        if (html != undefined) {
             $(clone).append(html);
         }
         $("#system_feedback").prepend(clone);
@@ -209,7 +237,8 @@ var NewClientViewModel = function () {
                 date_dep: self.date_dep(),
                 hotel_fk: self.hotel_fk(),
                 agency_fk: self.agency_fk(),
-                oneway: self.oneway(),
+                //oneway: self.oneway(),
+                product_fk: self.trans_product_fk(),
                 comments: self.comments(),
 
 
@@ -217,43 +246,26 @@ var NewClientViewModel = function () {
             };
 
 
-
-            //console.log('yuv: before post');
-            $.post(url_clients, new_obj)
+            $.post(url_reservations, new_obj)
             .done(function (obj_from_server) {
-                //console.log('yuv: post done');
                 popMessage('success');
                 document.getElementById("form_client").reset();
                 $('#txtComments').text('');
             })
             .fail(function (error) {
-                //console.log('yuv: post fail');
                 popMessage('danger', error.responseText);
             });
 
 
         }
-        //self.reset = function () {
-
-        //};
-
 
     };
 
 
 
-
 };
-// Activates knockout.js
-ko.applyBindings(new NewClientViewModel());
-
-//Date.prototype.yyyymmdd = function () {
-//    var yyyy = this.getFullYear().toString();
-//    var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-//    var dd = this.getDate().toString();
-//    return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]); // padding
-//};
-
+//// Activates knockout.js
+//ko.applyBindings(new ReservationViewModel());
 
 
 

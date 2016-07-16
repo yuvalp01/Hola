@@ -20,26 +20,6 @@
 
     <div class="panel-body">
 
-
-<%--        <form class="form-horizontal">
-            form-inline
-            <div class="form-group has-success has-feedback">
-                <label class="control-label col-sm-3" for="inputSuccess3">Input with success</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputSuccess3" />
-                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                </div>
-            </div>
-            <div class="form-group   has-feedback">
-                <label class="control-label col-sm-3" for="inputSuccess3">Flight #</label>
-                <div class="col-sm-9">
-                    <input type="text" id="inputSuccess4" class="form-control" />
-                    <span class="glyphicon  glyphicon-warning-sign  form-control-feedback"></span>glyphicon-ok || glyphicon-warning-sign ||glyphicon-remove  
-                </div>
-            </div>
-        </form>--%>
-
-
         <div class="form-group">
             <label class="col-sm-2 control-label">Flight #</label>
             <div class="col-sm-10">
@@ -88,6 +68,7 @@
     <table class="table table-striped table-bordered table-hover" id="tbl">
         <thead>
             <tr>
+                <th style="width: 100px"></th>
                 <th>Flight #</th>
                 <th>Date</th>
                 <th>Time</th>
@@ -95,14 +76,21 @@
             </tr>
             <tr id="trLoading" style="display: inline-grid">
                 <td colspan="7" style="text-align: center;">Loading...</td>
-
             </tr>
         </thead>
         <tbody data-bind="foreach: flights">
             <tr>
+                <td>
+                    <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>
+                    <button class="btn btn-danger btn-circle" title="Delete Plan" data-bind="click: $parent.DeleteFlight">Del</button>
+                </td>
                 <td data-bind="text: num"></td>
                 <td data-bind="text: date"></td>
-                <td data-bind="text: time"></td>
+                <td>
+                
+                    <span data-bind="text: time, visible: !(editable())"></span>
+                    <input class="form-control" type="time" data-bind="value: time, visible: editable" style="width: 120px" />
+                </td>
                 <td data-bind="text: destination"></td>
             </tr>
         </tbody>
@@ -111,13 +99,45 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="FooterScripts" runat="Server">
 
-    <%--    <script src="../scripts/knockout-3.4.0.js"></script>--%>
+
     <script src="../views_client/view_flight.js"></script>
+
+
     <script>
 
         $(document).ready(function () {
             $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
 
+
+            //$('#tbl').DataTable({
+
+            //    //"columnDefs": [
+            //    //    { "visible": false, "targets": 0 }
+            //    //],
+
+
+            //    "paging": false,
+            //    "sorting": true,
+            //    "searching": true,
+            //    "info": false,
+            //    //dom: 'Bfrtip',
+            //    //buttons: [
+            //    //    'excel','copy', 'csv', 'pdf',  'print'
+            //    //]
+            //});
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 </asp:Content>

@@ -125,7 +125,6 @@
 
 
     <link href="../Content/DataTables/css/buttons.dataTables.css" rel="stylesheet" />
-
     <script src="../scripts/DataTables/dataTables.buttons.js"></script>
     <script src="../scripts/jszip.min.js"></script>
     <script src="../scripts/pdfmake.min.js"></script>

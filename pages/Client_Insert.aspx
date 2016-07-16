@@ -3,29 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-
-      <%--  <form class="form-horizontal"> form-inline
-            <div class="form-group has-success has-feedback">
-                <label class="control-label col-sm-3" for="inputSuccess3">Input with success</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputSuccess3" aria-describedby="inputSuccess3Status"/>
-                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                </div>
-            </div>
-            <div class="form-group   has-feedback">has-warning
-                <label class="control-label col-sm-3" for="inputSuccess3">Input with success</label>
-                <div class="col-sm-9">
-                    <input type="text" id="inputSuccess4" class="form-control" />
-                    <span class="glyphicon  form-control-feedback" ></span>glyphicon-ok || glyphicon-warning-sign ||glyphicon-remove  
-                </div>
-            </div>
-        </form>
-    --%>
-
-
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><i class="fa fa-plus-circle fa-fw"></i>Insert a New Reservation</h1>
+            <h1 class="page-header"><i id="test" class="fa fa-plus-circle fa-fw"></i>Insert a New Reservation</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -79,7 +59,7 @@
                                 <div id="personal_info" class="col-lg-7">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
-                                             <i class="fa fa-user fa-fw"></i>
+                                            <i class="fa fa-user fa-fw"></i>
                                             Personal Info
                        
                                         </div>
@@ -92,7 +72,7 @@
 
                                             </div>
 
-                                            <div class="form-group "<%-- data-bind="css: { 'has-warning': PNR() == '' } "--%>>
+                                            <div class="form-group " <%-- data-bind="css: { 'has-warning': PNR() == '' } "--%>>
                                                 <label class="control-label">PNR*</label>
 
                                                 <input data-bind="value: PNR" id="txtPNR" required="required" class="form-control" placeholder="PNR" />
@@ -100,7 +80,7 @@
 
                                             <div class="form-group ">
                                                 <label class="control-label">PAX*</label>
-                                                <input type="number" data-bind="value: PAX" style="width: 50px;" min="1" max="99" id="txtPAX" required="required" class="form-control" />
+                                                <input type="number" data-bind="value: PAX" style="width: 60px;" min="1" max="99" id="txtPAX" required="required" class="form-control" />
 
                                             </div>
 
@@ -116,7 +96,7 @@
                                 <div id="flight_info" class="col-lg-5">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
-                                             <i class="fa fa-plane fa-fw"></i>
+                                            <i class="fa fa-plane fa-fw"></i>
                                             Flights Info
                        
                                         </div>
@@ -125,18 +105,18 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Arrival Date*</label>
-                                                <label style="font-weight: normal; margin-left: 5px">
+                                                <%--                                                <label style="font-weight: normal; margin-left: 5px">
 
                                                     <input data-bind="checked: oneway" id="cbIsOw" type="checkbox" />
                                                     One Way
-                                                </label>
+                                                </label>--%>
 
                                                 <input id="txtDateArr" required="required" class="form-control date" data-bind="value: date_arr" placeholder="Pick Arrival Date" />
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Arrival Flight*</label>
 
-                                                <select id="ddlFlightArr"  required="required" class="form-control margin-bottom-14" data-bind=" click: function () { $root.arrival_validation(); },  
+                                                <select id="ddlFlightArr" required="required" class="form-control margin-bottom-14" data-bind=" click: function () { $root.arrival_validation(); },
 
     options: flights_filter_arr,
     optionsText: 'details',
@@ -150,11 +130,11 @@
                                             </div>
                                             <div id="div_dep">
                                                 <div class="form-group">
-                                                    <label class="control-label">Departure Date</label>
+                                                    <label class="control-label">Departure Date*</label>
                                                     <input id="txtDateDep" required="required" class="form-control date" data-bind="value: date_dep" placeholder="Pick Departure Date" />
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label">Departure Flight</label>
+                                                    <label class="control-label">Departure Flight*</label>
 
 
                                                     <select id="ddlFlightDep" required="required" class="form-control margin-bottom-14" data-bind="click: function () { $root.departure_validation(); },
@@ -181,20 +161,48 @@
 
                                     <div class="form-group">
                                         <label>Comments</label>
-                                        
-                                        <textarea  data-bind="text: comments" id="txtComments" form="form_client" class="form-control">
+
+                                        <textarea data-bind="text: comments" id="txtComments" form="form_client" class="form-control">
                                         </textarea>
                                     </div>
-                                    <div class="form-group">
-                                        <button id="btn_insert" data-bind="click: insert_client" class="btn btn-primary" type="button">Insert</button>
-                                        <button id="btn_reset" type="reset"  class="btn btn-default">Reset</button>
-                                    </div>
+
 
 
                                 </div>
 
 
+                                <div class="col-lg-12">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <i class="fa fa-bus  fa-fw"></i>
+                                            Transportation
+                                        </div>
+                                        <!-- /.panel-heading -->
+                                        <div class="panel-body form-inline">
 
+                                            <div class="form-group ">
+                                                <label class="control-label">Transportation*</label>
+                                                <select class="form-control margin-bottom-14" required="required" data-bind="
+    options: products_trans,
+    optionsText: 'name',
+    optionsValue: 'ID',
+    value: trans_product_fk,
+    optionsCaption: 'Select Transportation',
+    valueAllowUnset: true
+">
+                                                </select>
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button id="btn_insert" data-bind="click: insert_client" class="btn btn-primary" type="button">Insert</button>
+                                        <button id="btn_reset" type="reset" class="btn btn-default">Reset</button>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -208,25 +216,24 @@
                                     </div>
                                     <!-- /.panel-heading -->
                                     <div id="system_feedback" class="panel-body">
-                                        <div id="message_info" style="display: none;"  class="alert alert-info  alert-dismissable">
+                                        <div id="message_info" style="display: none;" class="alert alert-info  alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-<%--                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#" class="alert-link">Alert Link</a>.--%>
-                       
+                                            <%--                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#" class="alert-link">Alert Link</a>.--%>
                                         </div>
                                         <div id="message_success" style="display: none" class="alert alert-success alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            The client: <b id="new_pnr" data-bind="text: names"></b>  was successfuly added.  <a data-bind="    attr: { href: 'Client_Update.aspx?search=' + PNR() }" href="Client_Sales.aspx" target="_blank" class="alert-link">Click here to add service</a>.
+                                            The client: <b id="new_pnr" data-bind="text: names"></b>was successfuly added.  <a data-bind="    attr: { href: 'Client_Update.aspx?search=' + PNR() }" href="Client_Sales.aspx" target="_blank" class="alert-link">Click here to add service</a>.
                            
                                         </div>
                                         <div id="message_warning" style="display: none" class="alert alert-warning alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            
-                           
+
+
                                         </div>
                                         <div id="message_danger" style="display: none" class="alert alert-danger alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            
-                           
+
+
                                         </div>
                                     </div>
                                     <!-- .panel-body -->
@@ -259,24 +266,26 @@
 
 
     <script type="text/javascript">
+        var my = { viewModel: new ReservationViewModel() };
+        ko.applyBindings(my.viewModel);
 
         $(document).ready(function () {
 
             $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: -30 });
 
-            $('#cbIsOw').change(function () {
-                if (this.checked) {
-                    $('#div_dep').slideUp();
-                    $('#txtDateDep').removeAttr('required', 'required');
-                    $('#ddlFlightDep').removeAttr('required', 'required');
+            //$('#cbIsOw').change(function () {
+            //    if (this.checked) {
+            //        $('#div_dep').slideUp();
+            //        $('#txtDateDep').removeAttr('required', 'required');
+            //        $('#ddlFlightDep').removeAttr('required', 'required');
 
-                }
-                else {
-                    $('#div_dep').slideDown();
-                    $('#txtDateDep').attr('required', 'required');
-                    $('#ddlFlightDep').attr('required', 'required');
-                }
-            });
+            //    }
+            //    else {
+            //        $('#div_dep').slideDown();
+            //        $('#txtDateDep').attr('required', 'required');
+            //        $('#ddlFlightDep').attr('required', 'required');
+            //    }
+            //});
 
             //$('#form_client').validate();
 
@@ -352,7 +361,35 @@
 
             });
 
+            var count = 0;
+            $('#test').click(function () {
+                count++;
+                if (count % 3 == 0) {
+                    var pnr = Math.floor((Math.random() * 10000));
+                    var pax = Math.floor((Math.random() * 5) + 1);
+                    var hotel = Math.floor((Math.random() * 5) + 1);
+                    var agency = Math.floor((Math.random() * 4) + 1);
+                    var names = 'moshe';
+
+                    my.viewModel.PNR(pnr);
+                    my.viewModel.names(names);
+                    my.viewModel.PAX(pax);
+                    my.viewModel.phone('123456');
+                    my.viewModel.num_arr('LY101');
+                    my.viewModel.date_arr('2016-10-01');
+                    my.viewModel.num_dep('LY201');
+                    my.viewModel.date_dep('2016-10-05');
+                    my.viewModel.hotel_fk(hotel);
+                    my.viewModel.agency_fk(agency);
+                    my.viewModel.trans_product_fk(1);
+                    my.viewModel.comments('bla bla bla');
+
+                }
+            });
+
         });
+
+
 
 
     </script>

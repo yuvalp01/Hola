@@ -19,11 +19,6 @@
         #tbl_sales_wrapper {
             margin: 3px;
         }
-
-        /*#modal_sale div.modal-content {
-        
-        padding:3px;
-        }*/
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -103,7 +98,7 @@
 
                                                     </div>
 
-                                                    <div class="form-group " <%-- data-bind="css: { 'has-warning': PNR() == '' } "--%>>
+                                                    <div class="form-group">
                                                         <label class="control-label">PNR*</label>
 
                                                         <input data-bind="value: PNR" id="txtPNR" readonly="readonly" required="required" class="form-control" placeholder="PNR" />
@@ -111,7 +106,7 @@
 
                                                     <div class="form-group ">
                                                         <label class="control-label">PAX*</label>
-                                                        <%--TODO: to avoid zero use:  pattern="^[1-9]\d*$"  --%>
+
                                                         <input type="number" data-bind="value: PAX" style="width: 50px;" min="1" max="99" id="txtPAX" required="required" class="form-control" />
 
                                                     </div>
@@ -137,11 +132,11 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">Arrival Date*</label>
-                                                        <label style="font-weight: normal; margin-left: 5px">
+                                                        <%--                                                        <label style="font-weight: normal; margin-left: 5px">
 
                                                             <input data-bind="checked: oneway" id="cbIsOw" type="checkbox" />
                                                             One Way
-                                                        </label>
+                                                        </label>--%>
 
                                                         <input id="txtDateArr" required="required" class="form-control date" data-bind="value: date_arr" placeholder="Pick Arrival Date" />
                                                     </div>
@@ -162,11 +157,11 @@
                                                     </div>
                                                     <div id="div_dep">
                                                         <div class="form-group">
-                                                            <label class="control-label">Departure Date</label>
+                                                            <label class="control-label">Departure Date*</label>
                                                             <input id="txtDateDep" required="required" class="form-control date" data-bind="value: date_dep" placeholder="Pick Departure Date" />
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label">Departure Flight</label>
+                                                            <label class="control-label">Departure Flight*</label>
 
 
                                                             <select id="ddlFlightDep" required="required" class="form-control margin-bottom-14" data-bind="click: function () { $root.departure_validation(); },
@@ -185,10 +180,7 @@
 
                                                 </div>
                                             </div>
-
-
                                         </div>
-
                                         <div class="col-lg-12">
 
                                             <div class="form-group">
@@ -198,21 +190,11 @@
                                             </div>
                                             <div class="form-group">
                                                 <button data-bind="click: $root.UpdateClient" id="btn_update" class="btn btn-primary" type="button">Save</button>
-                                                <button data-bind="click: $root.cancel_client" class="btn btn-danger" type="button">Delete</button>
+                                                <button data-bind="click: $root.cancel_client" id="btn_delete" class="btn btn-danger" type="button">Delete</button>
                                                 <button id="btn_close" class="btn btn-default" type="button">Close</button>
-
                                             </div>
-
-
                                         </div>
-
-
-
                                     </div>
-
-
-
-
                                     <div class="col-lg-4">
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
@@ -255,7 +237,6 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <%--                        <input id="btnUpdate" class="btn btn-primary" data-bind="click: update" type="button" value="Update" />--%>
                     </div>
                 </div>
             </div>
@@ -275,7 +256,12 @@
 
                             <div class="row">
 
-                                <div class="col-lg-6" data-bind="foreach: { data: products_trans }">
+
+
+
+
+
+                                <%--                                <div class="col-lg-6" data-bind="foreach: { data: products_trans }">
                                     <div class="input-group col-lg-12">
                                         <span class="input-group-addon">
                                             <input type="radio" data-bind="attr: { id: 'rb_' + ID(), value: ID, 'data-rate': rate }, checked: $root.trans_product_fk" name="trans_type" />
@@ -283,20 +269,33 @@
                                         </span>
                                         <input data-bind="value: name() + ' (Rate:' + rate() + ')'" readonly="readonly" class="form-control" />
                                     </div>
-                                </div>
+                                </div>--%>
 
 
-                                <div class="col-lg-6">
-
+                                <div class="col-lg-6 ">
                                     <div class="form-group">
-                                        <label class="control-label">Current Price</label>
-                                        <input class="form-control" type="number" style="width: 70px" data-bind="value: trans_remained_pay" min="0" step="1" />
+                                        <select id="ddlTrans" required="required" class="form-control margin-bottom-14" style="display: inline; width: 555px" data-bind="
+    options: products_trans,
+    optionsText: 'name',
+    optionsValue: 'ID',
+    value: trans_product_fk,
+    optionsCaption: 'Select Transportation',
+    valueAllowUnset: true
+    ">
+                                        </select>
                                     </div>
 
-                                    <div class="form-group">
+
+
+                                    <%--                                    <div class="form-group">
+                                        <label class="control-label">Current Price</label>
+                                        <input class="form-control" type="number" style="width: 70px" data-bind="value: trans_remained_pay" min="0" step="1" />
+                                    </div>--%>
+
+                                    <div class="form-group" style="width: auto">
                                         <label class="control-label">Comments</label>
                                         <br />
-                                        <textarea cols="30" class="form-control" data-bind="value: trans_comments"></textarea>
+                                        <textarea class="form-control" style="width: 555px" data-bind="value: trans_comments"></textarea>
                                     </div>
 
                                     <div>
@@ -317,22 +316,6 @@
             </div>
         </div>
 
-        <%--                <button class="btn btn-primary" type="button" id="btntest">
-            test
-        </button>
-        
-        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Link with href
-        </a>
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Button with data-target
-        </button>
-
-                <div class="btn btn-primary"  data-toggle="collapse" data-target="#collapseExample" >
-                                          <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Business - pre-order by agency">
-                                    <input type="radio" data-bind="checked: sale_type" value="BIZ" />BIZ</label>
-                                <label class="radio-inline" data-toggle="tooltip" data-placement="bottom" title="Private - order by the client">
-                                    <input type="radio" data-bind="checked: sale_type" value="PRI" />PRI</label>
-        </div>--%>
 
 
 
@@ -344,7 +327,7 @@
                         <h4 class="modal-title"></h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-inline panel panel-default  well" style="padding: 5px;     margin-bottom: 0px;">
+                        <form class="form-inline panel panel-default  well" style="padding: 5px; margin-bottom: 0px;">
                             <div class="form-group">
                                 <label class="control-label">Tour:</label>
                                 <select id="ddlTours" required="required" class="form-control margin-bottom-14" style="display: inline; width: 200px" data-bind="
@@ -352,7 +335,7 @@
     optionsText: 'name',
     optionsValue: 'ID',
     value: product_fk,
-    optionsCaption: 'Select Service',
+    optionsCaption: 'Select Tour',
     valueAllowUnset: true
 ">
                                 </select>
@@ -361,12 +344,12 @@
                                 <label class="control-label">People</label>
                                 <input type="number" style="width: 60px" class="form-control" data-bind="value: persons, attr: { max: persons_max }" min="1" id="txtP" />
                             </div>
-                            <div id="rblType"  class="form-group">
+                            <div id="rblType" class="form-group">
 
-                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="Business - pre-order by agency">
-                                    <input type="radio" name="xxx" required data-bind="checked: sale_type" value="BIZ" />BIZ</label>
-                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="Private - order by the client">
-                                    <input type="radio" name="xxx" required  data-bind="checked: sale_type" value="PRI" />PRI</label>
+                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="External - pre-order by agency">
+                                    <input type="radio" name="xxx" required data-bind="checked: sale_type" value="external" />External</label>
+                                <label class="radio-inline" data-container="body" data-toggle="tooltip" data-placement="top" title="Internal - order directly by the client">
+                                    <input type="radio" name="xxx" required data-bind="checked: sale_type" value="internal" />Internal</label>
                             </div>
 
                             <div id="divPayment" class="collapse" style="margin-top: 5px">
@@ -398,17 +381,18 @@
                         </form>
                     </div>
 
-                    <div data-bind="visible: sales().length==0"  class="alert alert-info" role="alert" style="margin-left: 14px;
-    margin-right: 14px;">There are no tours reserved for this reservation</div>
+                    <div data-bind="visible: sales().length == 0" class="alert alert-info" role="alert" style="margin-left: 14px; margin-right: 14px;">
+                        There are no tours reserved for this reservation
+                    </div>
 
-           
-                    <table data-bind="visible: sales().length>0" id="tbl_sales" class="table table-striped table-bordered table-hover order-column compact" style="width: 98%; margin-left: 5px;">
+
+                    <table data-bind="visible: sales().length > 0" id="tbl_sales" class="table table-striped table-bordered table-hover order-column compact" style="width: 98%; margin-left: 5px;">
                         <thead>
                             <tr>
-                                <th>Service</th>
+                                <th>Tour</th>
                                 <th>Persons</th>
                                 <th>Type</th>
-                                <th style="width: 100px" title="Balance Remaining of the client to Hola Shalom">Remained</th>
+                                <%-- <th style="width: 100px" title="Balance Remaining of the client to Hola Shalom">Remained</th>--%>
                                 <th style="width: 200px">Comments</th>
                                 <th style="width: 100px"></th>
 
@@ -420,29 +404,20 @@
                                 <td data-bind="text: product_name"></td>
                                 <td>
                                     <span data-bind="text: persons, visible: !(editable())"></span>
-                                    <input class="form-control" type="number" step="any" min="1" max="" data-bind="attr: { 'max': $parent.PAX }, value: persons, visible: editable" style="width: 50px" />
+                                    <input class="form-control" type="number" step="any" min="1" data-bind="attr: { 'max': $parent.persons }, value: persons, visible: editable" style="width: 60px" />
 
                                 </td>
                                 <td data-bind="text: sale_type"></td>
-                                <td>
-                                    <%--                                    visible: !(editable()),--%>
-                                    <%--                                    <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>--%>
+                                <%--                                <td>
                                     <span data-bind="text: remained_pay() + ' €', visible: !(editable())"></span>
-                                    <%--, event: { blur: $parent.updatePrice }--%>
                                     <input class="form-control" type="number" step="any" min="0" data-bind="value: remained_pay, visible: editable" style="width: 70px" />
-                                </td>
+                                </td>--%>
                                 <td>
-
-                                    <%--                                    <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>--%>
                                     <span data-bind="text: comments, visible: !(editable())"></span>
                                     <textarea class="form-control" data-bind=" value: comments, visible: editable"></textarea>
-
-
-
                                 </td>
                                 <td>
                                     <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>
-                                    <%--                                    <button class="btn btn-info btn-circle" title="Cancel Action" data-bind="click: $parent.edit_mode"></button>--%>
                                     <button class="btn btn-danger btn-circle" title="Delete Sale" data-bind="click: $parent.cancel">Del</button>
                                 </td>
 
@@ -495,7 +470,7 @@
         <table class="table table-striped table-bordered table-hover order-column compact" id="tblClients">
             <thead>
                 <tr>
-                    <th>Action</th>
+                    <th style="width:110px">Action</th>
                     <th>PNR</th>
                     <th>Names</th>
                     <th>PAX</th>
@@ -511,9 +486,9 @@
             <tbody data-bind="foreach: { data: clients_filter }">
                 <tr>
                     <td>
-                        <img class="edit" title="Edit Reservation" src="../icons/fa-pencil.png" />
-                        <img class="trans" title="Transportation" src="../icons/fa-train.png" />
-                        <img class="sale" title="Tours" src="../icons/tourguide.png" />
+                        <img class="edit" style="cursor:pointer" title="Edit Reservation"  src="../icons/fa-pencil.png" />
+                        <img class="trans" style="cursor:pointer" title="Transportation" src="../icons/fa-train.png" />
+                        <img class="sale" style="cursor:pointer" title="Tours" src="../icons/tourguide.png" />
 
                     </td>
                     <td data-bind="text: PNR"></td>
@@ -524,44 +499,9 @@
 
                 </tr>
             </tbody>
-
-
-
         </table>
-
     </div>
-    <%--                                <div class="col-lg-6">
-                                    <div class="input-group col-lg-12">
-                                        <span class="input-group-addon">
-                                            <input type="radio" value="1" data-bind="checked: trans_fk" name="trans_type" />
-                                        </span>
-                                        <input data-bind="hover: $parent.get_price" value="Bus Transfer" readonly="readonly" class="form-control" />
-                                    </div>
-                                    <div class="input-group col-lg-12">
-                                        <span class="input-group-addon">
-                                            <input type="radio" value="2" data-bind="checked: trans_fk" name="trans_type" />
-                                        </span>
 
-                                        <input value="Bus one way" readonly="readonly" class="form-control" />
-                                    </div>
-                                    <div class="input-group col-lg-12">
-                                        <span class="input-group-addon">
-                                            <input type="radio" value="3" data-bind="checked: trans_fk" name="trans_type" />
-                                        </span>
-
-                                        <input value="Taxi" readonly="readonly" class="form-control" />
-                                    </div>
-                                    <div class="input-group col-lg-12">
-                                        <span class="input-group-addon">
-                                            <input type="radio" value="10" data-bind="checked: trans_fk" name="trans_type" />
-                                        </span>
-
-                                        <input value="Other" readonly="readonly" class="form-control" />
-                                    </div>
-                                 
-                                    <!-- /input-group -->
-                                </div>--%>
-    <%--   <input type="number" step="1" min="0" class="form-control" style="width:40px" />--%>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="FooterScripts" runat="Server">
@@ -585,7 +525,7 @@
         var search = '<%=Search%>';
         $(document).ready(function () {
             my.viewModel.search_term_filter(search);
- 
+
             // $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
             $(".date").datepicker({ dateFormat: 'yy-mm-dd' });
 
@@ -596,19 +536,20 @@
             });
 
 
-            $('#cbIsOw').change(function () {
-                if (this.checked) {
-                    $('#div_dep').slideUp();
-                    $('#txtDateDep').removeAttr('required', 'required');
-                    $('#ddlFlightDep').removeAttr('required', 'required');
 
-                }
-                else {
-                    $('#div_dep').slideDown();
-                    $('#txtDateDep').attr('required', 'required');
-                    $('#ddlFlightDep').attr('required', 'required');
-                }
-            });
+            //$('#cbIsOw').change(function () {
+            //    if (this.checked) {
+            //        $('#div_dep').slideUp();
+            //        $('#txtDateDep').removeAttr('required', 'required');
+            //        $('#ddlFlightDep').removeAttr('required', 'required');
+
+            //    }
+            //    else {
+            //        $('#div_dep').slideDown();
+            //        $('#txtDateDep').attr('required', 'required');
+            //        $('#ddlFlightDep').attr('required', 'required');
+            //    }
+            //});
 
 
 
@@ -620,6 +561,7 @@
 
             //$('#tblSearch tbody').on('click', 'tr', function () {
             $('#tblClients tbody').on('click', '.sale', function () {
+                $(".form-group").removeClass("has-error");
                 $('#modal_sale').modal('show');
 
                 var client = ko.dataFor(this);
@@ -627,13 +569,15 @@
                 my.viewModel.agency_fk(client.agency_fk());
                 my.viewModel.persons(client.PAX());
                 my.viewModel.persons_max(client.PAX());
-                my.viewModel.sale_type('');
-
+                /////TODO: new version uncomment:
+                //my.viewModel.sale_type('');
+                /////
                 my.viewModel.load_sales();
                 $('.modal-title').text("[" + client.PNR() + "] " + client.names())
             });
 
             $('#tblClients tbody').on('click', '.trans', function () {
+                $(".form-group").removeClass("has-error");
                 $('#modal_trans').modal('show');
 
                 var client = ko.dataFor(this);
@@ -648,7 +592,9 @@
 
             //$('#tblSearch tbody').on('click', 'tr', function () {
             $('#tblClients tbody').on('click', '.edit', function () {
-
+                $(".form-group").removeClass("has-error");
+                $('#btn_update').show();
+                $('#btn_delete').show();
                 $('#modal_edit').modal('show');
                 //var tr = $(this).closest('tr');
                 var client = ko.dataFor(this);
@@ -662,79 +608,8 @@
                 $('.modal-title').text("[" + client.PNR() + "] " + client.names())
             });
 
-
-            //$("#txtSearchBox").on("keyup search input paste cut", function () {
-            //    dataTable.search(this.value).draw();
-            //});
-
-
-
-            //$('#exampleModal').on('show.bs.modal', function (event) {
-            //    var button = $(event.relatedTarget) // Button that triggered the modal
-            //    var recipient = button.data('whatever') // Extract info from data-* attributes
-            //    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            //    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            //    var modal = $(this)
-            //    modal.find('.modal-title').text('New message to ' + recipient)
-            //    modal.find('.modal-body input').val(recipient)
-            //})
-
-
         });
 
 
-
-
-        //dataTable = $('#tblSearch').DataTable({
-        //    "ajax": url_search,
-        //    "pageLength": 10,
-        //    "bLengthChange": false,
-        //    "dom": '<"toolbar">rtip',
-        //    "sAjaxDataProp": "",
-        //    "autoWidth": true,
-        //    "columns": [
-
-
-        //                { "data": "PNR", "width": "60px" },
-        //                { "data": "PNR", "width": "50px" },
-        //                { "data": "names", "width": "180px" },
-        //                { "data": "PAX", "width": "70px" },
-        //                //{ "data": "num_arr" },
-        //                { "data": "date_arr" },
-        //                //{ "data": "num_dep" },
-        //                //{ "data": "date_dep" },
-        //                //{ "data": "hotel" },
-        //                { "data": "agency" },
-        //                { "data": "agency_fk" }
-        //    ],
-        //    "columnDefs": [
-        //                {
-        //                    "render": function () {
-        //                        return '<img class="edit"  title="Edit Client" src="../icons/fa-pencil.png"/> <img title="Change Transportation" class="trans" src="../icons/fa-train.png" />  <img title="Add Service" class="sale" src="../icons/fa-plus-square.png" />';
-        //                        //<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Open modal for @getbootstrap</button>
-
-        //                    },
-        //                    "targets": 0
-        //                },
-        //                { type: "phoneNumber", targets: 0 },
-        //                {
-        //                    "render": function (data, type, row) {
-        //                        return new Date(data).yyyymmdd();
-
-        //                    },
-        //                    "targets": 4
-        //                },
-        //                {
-
-        //                }
-
-        //    ],
-
-        //});
-
-        //if (search != '') {
-        //    $('#txtSearchBox').val(search);
-        //    dataTable.search(search).draw();
-        //}
     </script>
 </asp:Content>

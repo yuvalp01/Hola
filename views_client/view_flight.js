@@ -5,16 +5,20 @@
 
 //Constructor for an object with two properties
 function Flight(data) {
-    this.num = data.num;
+    this.num = ko.observable(data.num);
     var d = new Date(data.date);
-    this.date = d.yyyymmdd();
-
-    this.time = data.time;
+    this.date = ko.observable(d.yyyymmdd());
+    var t = data.time;
+    this.time = ko.observable(t.HHmm());
 
     this.destination = data.destination;
     this.direction = data.direction;
-    this.time_approved = data.time_approved;
+    //this.time_approved = data.time_approved;
     this.date_update = data.date_update;
+
+    this.editable = ko.observable(false);
+    this.editBtnClass = ko.observable('btn btn-circle btn-info');
+    this.editBtnText = ko.observable('Edit');
 };
 
 
@@ -64,7 +68,7 @@ function FlightViewModel(data) {
     self.add_server = function () {
 
         if (isValid()) {
-            var d = new Date( self.new_date());
+            var d = new Date(self.new_date());
             var new_obj = {
                 num: self.new_num(),
                 date: d.yyyymmdd(),
@@ -87,16 +91,84 @@ function FlightViewModel(data) {
         }
     };
 
-    self.remove_server = function (obj) {
 
+
+    self.edit_mode = function () {
+        //this.editable(!this.editable());
+        //If edite mode, we want to save it
+        if (this.editable() == true) {
+
+            self.UpdateFlight(this);
+            this.editBtnText('Edit');
+            this.editBtnClass('btn btn-circle btn-info');
+        }
+        else {
+            this.editable(true);
+            this.editBtnText('Save');
+            this.editBtnClass('btn btn-circle btn-success');
+        }
+    };
+
+    self.UpdateFlight = function (item) {
+
+       // var _url = url_flights + '/UpdateFlight/' + item.num() + '/' + item.date() + '/' + item.time();
+        var _url = url_flights + '/UpdateFlight';// + item.num() + '/' + item.date() + '/' + item.time();
+        //var flight = {
+        //    num: item.num(),
+        //    date: item.date(),
+        //    time:item.time()
+        //};
         $.ajax({
-            url: url_flights + '?num=' + obj.num() + '&date=' + obj.date(),
-            type: 'DELETE',
+            method: "PUT",
+            url: _url,
+            data: item,
+            dataType: "json",
         }).done(function () {
-            self_list.remove(obj)
+
+            //var guide_fk = item.guide_fk();
+            //var match = ko.utils.arrayFirst(self.guides(), function (guide) {
+            //    return guide.ID() === guide_fk;
+            //});
+            //item.guide_name(match.name());
+            item.editable(false);
+
+            //self.feedback_sale('');
         }).fail(function (error) {
-            alert("error");
+            // self.feedback_sale(error.responseText)
+            alert(error.responseText);
         });
+    }
+
+
+
+
+
+
+
+
+
+
+
+    self.DeleteFlight = function () {
+        if (confirm('Are you sure you want to delete this row?')) {
+            var item = this;
+            var _url = url_flights + '/DeleteFlight/' + item.num() + '/' + item.date();
+
+            $.ajax({
+                method: "DELETE",
+                url: _url,
+                //data: item,
+                dataType: "json",
+            }).done(function () {
+
+                self.flights.remove(item);
+                //self.feedback_sale('');
+            }).fail(function (error) {
+                alert(error.responseText);
+                // self.feedback_sale(error.responseText);
+            })
+        }
+
     }
 
 

@@ -35,13 +35,15 @@ function Product(data) {
     this.ID = ko.observable(data.ID);
     this.name = ko.observable(data.name);
     this.rate = ko.observable(data.rate);
-    this.type = ko.observable(data.type);
+    this.category = ko.observable(data.category);
+    this.subcat = ko.observable(data.subcat);
 }
 function Flight(data) {
     this.num = ko.observable(data.num);
     var _date = new Date(data.date).yyyymmdd();
     this.date = ko.observable(_date);
-    this.time = ko.observable(data.time);
+    var t = data.time;
+    this.time = ko.observable(t.HHmm());
     this.direction = ko.observable(data.direction);
 
     this.details = ko.dependentObservable(function () {
@@ -53,6 +55,7 @@ function Flight(data) {
 function Sale(data, isEditMode) {
     this.ID = ko.observable(data.ID);
     this.PNR = ko.observable(data.PNR);
+    this.agency_fk = ko.observable(data.agency_fk);
     this.product_fk = ko.observable(data.product_fk);
     this.product_name = ko.observable(data.product_name);
 
@@ -61,6 +64,7 @@ function Sale(data, isEditMode) {
     this.sale_type = ko.observable(data.sale_type);
     this.date_sale = ko.observable(data.date_sale);
     this.date_update = ko.observable(data.date_update);
+    this.canceled = ko.observable(data.canceled);
     this.comments = ko.observable(data.comments);
     this.editable = ko.observable(isEditMode);
     this.editBtnClass = ko.observable('btn btn-circle btn-info');
@@ -92,7 +96,7 @@ function SaleViewModel(data) {
     self.product_fk = ko.observable();
 
     self.rate = ko.observable();
-
+    self.tour_subcat = ko.observable();
 
 
 
@@ -101,7 +105,7 @@ function SaleViewModel(data) {
     self.PAX = ko.observable();
     self.phone = ko.observable();
     self.oneway = ko.observable(false);
-    self.comments = ko.observable();
+    self.comments = ko.observable('');
     self.date_arr = ko.observable()
     self.date_dep = ko.observable()
     self.num_arr = ko.observable();
@@ -114,7 +118,7 @@ function SaleViewModel(data) {
     self.trans_ID = ko.observable();
 
     //fileds - sale
-    self.sale_type = ko.observable();
+    self.sale_type = ko.observable('external');
     self.sale_comments = ko.observable();
 
 
@@ -133,7 +137,7 @@ function SaleViewModel(data) {
     self.calc_total = ko.computed({
 
         read: function () {
-            if (self.sale_type() == 'BIZ') {
+            if (self.sale_type() == 'external') {
                 self.remained_pay(0);
                 return 0;
             }
@@ -258,7 +262,7 @@ function SaleViewModel(data) {
         });
         self.hotels(mappedData);
     });
-    //get services from server:
+    //get products from server:
     $.getJSON(url_products, function (allData) {
         var mappedData = $.map(allData, function (item) {
             return new Product(item);
@@ -301,13 +305,13 @@ function SaleViewModel(data) {
 
     self.products_tour = ko.computed(function () {
         return ko.utils.arrayFilter(self.products(), function (product) {
-            return product.type() == 'tour' || product.type() == 'other';
+            return product.category() == 'tour';
         });
     });
 
     self.products_trans = ko.computed(function () {
         return ko.utils.arrayFilter(self.products(), function (product) {
-            return product.type() == 'transport';
+            return product.category() == 'transport';
         });
     });
 
@@ -321,6 +325,7 @@ function SaleViewModel(data) {
         });
         if (match) {
             self.rate(match.rate());
+            self.tour_subcat(match.subcat());
         }
         else {
             self.rate('');
@@ -330,6 +335,7 @@ function SaleViewModel(data) {
     ///Sales
 
     self.load_sales = function () {
+
         self.feedback_sale('');
         var _url = url_sales + "/getSales/" + self.agency_fk() + '/' + self.PNR() + "/tour,other";
         $.getJSON(_url, function (allData) {
@@ -342,13 +348,14 @@ function SaleViewModel(data) {
 
 
     self.add = function () {
+
         if (isValidContainer('modal_sale')) {
             //check if already exists.
             var match_product = ko.utils.arrayFirst(self.sales(), function (item) {
                 return item.product_fk() === self.product_fk();
             });
 
-            if (match_product && match_product.product_fk() != '100') {
+            if (match_product && self.tour_subcat() != 'other') {
                 self.feedback_sale('Product already exists');
                 return;
             }
@@ -360,7 +367,9 @@ function SaleViewModel(data) {
                 sale_type: self.sale_type(),
                 persons: self.persons(),
                 comments: self.sale_comments(),
-                remained_pay: self.remained_pay(),
+                //remained_pay: self.remained_pay(),
+                //TODO: comment in/out to price model
+                remained_pay: 0,
             };
 
             $.post(url_sales, _sale, function (sale_from_server) {
@@ -369,6 +378,7 @@ function SaleViewModel(data) {
                 self.persons(self.persons_max());
                 self.sale_comments('');
                 //self.remained_pay('');
+
                 self.load_sales();
 
             }).done(function (result) {
@@ -381,19 +391,25 @@ function SaleViewModel(data) {
 
     };
 
+    //self.edit_mode = function () {
+
+    //    this.editable(!this.editable());
+    //};
+
+
     self.edit_mode = function () {
-        if (this.editable()) {
+        //If edite mode, we want to save it
+        if (this.editable() == true) {
+
             self.UpdateSale(this);
-            this.editBtnClass('btn btn-circle btn-info');
             this.editBtnText('Edit');
-            this.editable(false);
+            this.editBtnClass('btn btn-circle btn-info');
         }
         else {
-            this.editBtnClass('btn btn-circle btn-primary');
-            this.editBtnText('Save');
             this.editable(true);
+            this.editBtnText('Save');
+            this.editBtnClass('btn btn-circle btn-success');
         }
-        //this.editable(!this.editable());
     };
 
 
@@ -446,25 +462,56 @@ function SaleViewModel(data) {
 
     }
 
-    self.update_transport = function () {
-        var _sale = {
-            PNR: self.PNR(),
-            product_fk: self.trans_product_fk(),
-            comments: self.trans_comments(),
-            remained_pay: self.trans_remained_pay(),
-        };
 
-        var _url = url_sales + '/UpdateTransport/' + self.trans_ID();
-        $.ajax({
-            method: "PUT",
-            url: _url,
-            data: _sale,
-            dataType: "json",
-        }).done(function (result) {
-            $('#modal_trans').modal('hide');
-        }).fail(function (error) {
-            self.feedback_trans(error.responseText);
-        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    self.update_transport = function () {
+
+        if (isValidContainer('modal_trans')) {
+
+
+            var _sale = {
+                PNR: self.PNR(),
+                agency_fk: self.agency_fk(),
+                product_fk: self.trans_product_fk(),
+                comments: self.trans_comments(),
+                //remained_pay: self.trans_remained_pay(),
+                //TODO: Comment in/out prices for next version
+                remained_pay: 0
+            };
+
+            var _url = url_sales + '/UpdateTransport/' + self.trans_ID();
+            $.ajax({
+                method: "PUT",
+                url: _url,
+                data: _sale,
+                dataType: "json",
+            }).done(function (result) {
+                $('#modal_trans').modal('hide');
+            }).fail(function (error) {
+                self.feedback_trans(error.responseText);
+            });
+        }
+        else {
+            popMessage('danger', 'Please fill out all required fields.')
+
+        }
     }
 
     self.trans_product_fk.subscribe(function (_new) {
@@ -517,17 +564,19 @@ function SaleViewModel(data) {
 
     });
 
-    self.sale_type.subscribe(function (_new) {
+    ////    //TODO: next version uncomment:
+    //self.sale_type.subscribe(function (_new) {
+    //    if (_new == "Internal") {
+    //        //$('#collapseExample').show('slow');
+    //        $('#divPayment').collapse('show');
+    //    }
+    //    else {
+    //        //$('#divPayment').hide('slow');
+    //        $('#divPayment').collapse('hide');
+    //    }
+    //});
+    //////
 
-        if (_new == "PRI") {
-            //$('#collapseExample').show('slow');
-            $('#divPayment').collapse('show');
-        }
-        else {
-            //$('#divPayment').hide('slow');
-            $('#divPayment').collapse('hide');
-        }
-    });
 
 
 
@@ -585,6 +634,9 @@ function SaleViewModel(data) {
             }).done(function (result) {
                 popMessage('success', 'The reservation for: <b> ' + self.names() + "</b>" + ' was successfuly <span style="color:red; font-weight:bold">DELETED</span>. Close the window to continue.');
                 self.get_clients();
+                $('#btn_update').hide();
+                $('#btn_delete').hide();
+
                 //$('#modal_edit').modal('hide');
             }).fail(function (error) {
                 popMessage('danger', error.responseText);
@@ -670,128 +722,6 @@ function SaleViewModel(data) {
 
 
 }
-
-
-
-
-
-
-//self.agency_fk_filter.subscribe(function (_new) {
-//    //// self.filter();
-//    // var xxx = self.clients_filter();
-//    // debugger;
-//});
-
-//self.date_arr_filter.subscribe(function (_new) {
-//    //self.filter();
-//    //var xxx = self.clients_filter();
-//    //debugger;
-//});
-
-/// Subscriptions
-
-//self.products_trans.subscribe(function (updated) {
-//    debugger;
-//    alert(updated);
-//});
-
-
-//this.selected = ko.computed(function () {
-//    return parseInt(selected(), 10) == this.id;
-//}, this);
-
-
-
-
-
-//self.UpdateSale = function (field, item) {
-//    var _url = url_sales + '/UpdateSale/' + field;
-//    $.ajax({
-//        method: "PUT",
-//        url: _url,
-//        data: item,
-//        dataType: "json",
-//    }).done(function (result) {
-//        item.editable(false);
-//    }).fail(function (error) {
-//        alert('Error');
-//    });
-//}
-
-
-
-
-
-
-
-
-
-
-//self.updatePrice = function (item) {
-//    //var item = this;
-//    //var new_price = item.remained_pay();
-//    if (item.remained_pay()) {
-//        var _url = url_sales + '/UpdatePrice';
-//        $.ajax({
-//            method: "PUT",
-//            url: _url,
-//            data: item,
-//            dataType: "json",
-//        }).done(function (result) {
-//            item.editable(false);
-//        });
-//    }
-//    else {
-
-//        alert('Please set a numeric value');
-//        item.remained_pay(0);
-//        //item.editBtnClass('btn btn-circle btn-primary');
-//        //item.editBtnText('Save');
-//        //item.editable(true);
-
-//    }
-//}
-
-//var tbl;
-//self.show_table_ = function () {
-//    if (self.PNR()) {
-//        var _url = url_sales +
-//        '?PNR=' + self.PNR();
-
-//        if (tbl) {
-//            tbl.ajax.url(_url).load();
-//        }
-
-//        else {
-//            tbl = $('#tbl_sales').DataTable({
-//                "ajax": _url,
-//                "searching": false,
-//                "info": false,
-//                "footer": false,
-//                "paging": false,
-//                "sAjaxDataProp": "",
-
-//                "columns": [
-
-//                    { "data": "product_name", },
-//                    { "data": "persons" },
-//                    { "data": "sale_type" },
-//                    { "data": "remained_pay" },
-//                    { "data": "comments" },
-
-//                ],
-
-//                "dom": '<"toolbar">rtip',
-//            });
-
-//        }
-
-//    };
-
-//}
-
-
-
 
 
 

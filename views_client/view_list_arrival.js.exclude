@@ -1,0 +1,321 @@
+﻿
+//var _url_flights_in = url_flights + '/GetFlightTransportArr';
+var _url_activities = url_activities + '/transport/in';
+var _url_event_post = url_events;//+ '//';
+
+var _url_print = '../print/ListArrival_Print.aspx?';
+
+
+function Flight(data) {
+    this.num = ko.observable(data.num);
+    var _date = new Date(data.date).yyyymmdd();
+    this.date = ko.observable(_date);
+    this.time = ko.observable(data.time);
+    this.sum = ko.observable(data.sum);
+    this.selected = ko.observable(false);
+}
+
+function Activity(data) {
+    this.ID = ko.observable(data.ID);
+    this.name = ko.observable(data.name);
+}
+
+function Guide(data) {
+    this.ID = ko.observable(data.ID);
+    this.name = ko.observable(data.name);
+}
+
+function Event(data) {
+    this.ID = ko.observable(data.ID);
+    this.date = ko.observable(data.date);
+    this.time = ko.observable(data.time);
+    this.activity_fk = ko.observable(data.activity_fk);
+    this.activity_name = ko.observable(data.activity_name);
+    this.guide_fk = ko.observable(data.guide_fk);
+    this.guide_name = ko.observable(data.guide_name);
+    this.comments = ko.observable(data.comments);
+    this.people = ko.observable(data.people);
+
+}
+
+
+
+
+
+function FlightViewModel(data) {
+
+    var self = this;
+    ///
+
+    self.flights = ko.observableArray([]);
+    self.activities = ko.observableArray([]);
+    self.guides = ko.observableArray([]);
+    self.events = ko.observableArray([]);
+
+
+    self.date_end = ko.observable();
+    self.print_url = ko.observable();
+
+    self.date_start = ko.observable();
+    self.activity_fk = ko.observable();
+    self.time = ko.observable();
+    self.guide_fk = ko.observable();
+    self.comments_trans = ko.observable();
+
+
+    self.selected_flights = ko.computed(function () {
+        var arr = self.flights();
+        return ko.utils.arrayFilter(arr, function (flight) {
+            return flight.selected();
+        });
+    });
+
+    $.getJSON(_url_activities, function (allData) {
+        var mappedData = $.map(allData, function (item) {
+            return new Activity(item);
+        });
+        self.activities(mappedData);
+    });
+
+    $.getJSON(url_guides, function (allData) {
+        var mappedData = $.map(allData, function (item) {
+            return new Guide(item);
+        });
+        self.guides(mappedData);
+    });
+
+
+    self.date_start.subscribe(function (newValue) {
+        //var _url = _url_flights_in + newValue;
+        //$.getJSON(_url, function (allData) {
+        //    var mappedData = $.map(allData, function (item) {
+        //        return new Flight(item);
+        //    });
+        //    self.flights(mappedData);
+
+        //});
+        //self.update_print_url();
+
+    });
+
+    self.activity_fk.subscribe(function (newValue) {
+
+        var _url_flights_arr = url_flights + '/GetFlightTransportArr_/' + self.date_start() + '/' + newValue;
+        $.getJSON(_url_flights_arr, function (allData) {
+            var mappedData = $.map(allData, function (item) {
+                return new Flight(item);
+            });
+            self.flights(mappedData);
+
+        });
+
+        var _url_events_arr = url_events + '/transport/' + self.date_start() + '/' + newValue;
+        $.getJSON(_url_events_arr, function (allData) {
+            var mappedData = $.map(allData, function (item) {
+                return new Event(item);
+            });
+            self.events(mappedData);
+        });
+
+
+        self.update_print_url();
+
+    });
+
+
+
+    self.select = function (flight) {
+        flight.selected(!flight.selected())
+        self.update_print_url();
+
+    };
+
+    self.date_end.subscribe(function (new_date_end) {
+        self.update_print_url();
+    });
+
+    self.updateSaleActivties = function () {
+        var item = this;
+        var _url = url_events + '/transport/' + self.date_start() + '/' + self.activity_fk() + '/' + item.ID();
+        $.ajax({
+            method: "PUT",
+            url: _url,
+            dataType: "json",
+        }).done(function (results) {
+
+            var mappedData = $.map(results, function (item) {
+                return new Event(item);
+            });
+            self.events(mappedData);
+
+            //debugger;
+            //item.people(results);
+            //self.feedback_sale('');
+        }).fail(function (error) {
+            alert(error.responseText);
+            // self.feedback_sale(error.responseText);
+        })
+
+    }
+
+
+
+
+    self.update_print_url = function () {
+
+
+        if (self.date_start() && self.selected_flights().length > 0 && self.date_end()) {
+
+
+            var url = _url_print +
+                        'date_start=' + self.date_start() +
+                        '&date_end=' + self.date_end() +
+                        //'&flights=' + self.get_flights_str();
+
+            self.print_url(url);
+        }
+    };
+
+
+    self.total_sum = ko.computed(function () {
+
+        if (self.selected_flights().length > 0) {
+            var total = 0;
+            for (var p = 0; p < self.selected_flights().length; ++p) {
+
+                total += self.selected_flights()[p].sum();
+            }
+            return total;
+        }
+        else return 0;
+
+    });
+
+
+
+
+
+    self.AssignPassengers = function () {
+        var item = this;
+        var _url = url_flightLists + "/AssignPassengers";
+        //if (isValidContainer('arrivals_wizard')) {
+
+        var _details = {
+            date: self.date_start(),
+            time: self.time(),
+            activity_fk: self.activity_fk(),
+            guide_fk: self.guide_fk(),
+            comments_trans: self.comments_trans(),
+            event_fk: item.ID(),
+            flights: self.selected_flights(),
+            direction: 'in',
+        };
+
+
+        $.ajax({
+            method: "PUT",
+            url: _url,
+            data: _details,
+            dataType: "json",
+        }).done(function (results) {
+          //  alert(results);
+            var mappedData = $.map(results, function (item) {
+                return new Event(item);
+            });
+            self.events(mappedData);
+        }).fail(function (error) {
+            alert(error.responseText);
+            // self.feedback_sale(error.responseText);
+        })
+        //}
+
+    };
+
+
+
+
+
+
+    self.addUpdateEvent = function () {
+        var url = url_flightLists + "/UpdateEventSaleEventsArr";
+
+
+        
+        if (isValidContainer('list_wizard')) {
+
+            var _details = {
+                date: self.date_start(),
+                time: self.time(),
+                activity_fk: self.activity_fk(),
+                guide_fk: self.guide_fk(),
+                comments_trans: self.comments_trans(),
+                flights: self.selected_flights()
+            };
+
+            $.post(url, _details, function (new_event) {
+                var locaNewEvent = new Event(new_event)
+                self.events.push(locaNewEvent);
+                alert(new_event.ID);
+            }).done(function () {
+                //  alert('done');
+                // self.feedback_sale('');
+            })
+            .fail(function (error) {
+                alert(error.responseText);
+                // self.feedback_sale(error.responseText);
+            });
+        }
+
+    };
+
+
+
+
+    self.addEvent = function () {
+
+        if (isValidContainer('arrivals_wizard')) {
+
+            var _event = {
+                date: self.date_start(),
+                time: self.time(),
+                activity_fk: self.activity_fk(),
+                guide_fk: self.guide_fk(),
+                comments: self.comments_trans(),
+                category: 'transport'
+            };
+
+            $.post(url_events, _event, function () {
+
+                //self.product_fk('');
+                //self.persons(self.persons_max());
+                //self.sale_comments('');
+
+            }).done(function () {
+                // self.feedback_sale('');
+            })
+            .fail(function (error) {
+                // self.feedback_sale(error.responseText);
+            });
+        }
+
+    };
+
+
+
+    //self.get_flights_str = function () {
+    //    var _flights = "";
+    //    var Flights = self.selected_flights();
+    //    for (var i = 0; i < Flights.length; i++) {
+
+    //        //if (Flights[i].selected()) {
+
+    //        var num = Flights[i].num();
+    //        var date = Flights[i].date();
+    //        _flights += num + '_' + date + '~';
+    //        //}
+    //    }
+    //    _flights = _flights.replace(/~$/, "");
+    //    return _flights;
+    //};
+
+}

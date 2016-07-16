@@ -115,7 +115,7 @@
 
 
                         <li>
-                            <a href="#"><i class="fa fa-list-alt fa-fw"></i>Create Lists<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-bus fa-fw"></i>Transportation<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="List_Arrival.aspx"><i class="fa fa-sign-in fa-fw"></i>Arrivals</a>
@@ -124,7 +124,9 @@
                                 <li>
                                     <a href="List_Departure.aspx"><i class="fa fa-sign-out  fa-fw"></i>Departures</a>
                                 </li>
-
+                                                                <li>
+                                    <a href="EventsTrans.aspx"><i class="fa fa-list-alt  fa-fw"></i>Lists</a>
+                                </li>
                             </ul>
                         </li>
 
@@ -133,10 +135,10 @@
                         </li>
 
                         <li>
-                            <a href="TourPlan.aspx"><i class="fa fa-calendar fa-fw"></i>Tour Plan </a>
+                            <a href="EventsTours.aspx"><i class="fa fa-calendar fa-fw"></i>Upcoming Tours</a>
                         </li>
 <%--                        <li>
-                            <a href="Invoices.aspx"><i class="fa fa-euro fa-fw"></i>Invoices </a>
+                            <a href="Invoices.aspx"><i class="fa fa-euro fa-fw"></i>Invoices </a>   
                         </li>--%>
 
 

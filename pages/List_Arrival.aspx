@@ -39,14 +39,17 @@
                             <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
                             <p>Step 3</p>
                         </div>
-
                         <div class="stepwizard-step">
                             <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
                             <p>Step 4</p>
                         </div>
+                        <div class="stepwizard-step">
+                            <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+                            <p>Step 5</p>
+                        </div>
                     </div>
                 </div>
-                <form role="form">
+                <form id="list_wizard" role="form">
                     <div class="row setup-content" id="step-1">
                         <div class="col-xs-12">
                             <div class="col-md-12">
@@ -63,32 +66,50 @@
                     <div class="row setup-content" id="step-2">
                         <div class="col-xs-12">
                             <div class="col-md-12">
-                                <h3 >Select Flights</h3>
-                               
-<%--                                <div class="progress">
-                                    <div data-bind="text:total_sum,  attr:{ 'aria-valuenow':total_sum}" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="50" style="width: 60%;">
-                                        
-                                    </div>
-                                </div>--%>
+
+
+                                <h3>Route</h3>
                                 <div class="form-group">
-                                    <table id="tbl_flights" class="table table-striped table-bordered table-hover">
+                                    <select required="required" id="ddlActivities" style="width: 250px" class="form-control margin-bottom-14" data-bind="
+    options: activities,
+    optionsText: 'name',
+    optionsValue: 'ID',
+    value: activity_fk,
+    optionsCaption: 'Select Route',
+    valueAllowUnset: true
+">
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <%--                                <h3>Tour Plan</h3>
+                                <input id="txtDateEnd" data-bind="value: date_end" required="required" type="text" class="date form-control" style="width: 250px" placeholder="Enter Last Date for Tour Plan" />--%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row setup-content" id="step-3">
+                        <div class="col-xs-12">
+
+
+                            <div class="col-md-12">
+                                <h3>Select Flights</h3>
+                                <div class="form-group">
+                                    <table id="tbl_flights" data-bind="visible: flights().length > 0" class="table table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th></th>
                                                 <th>Flight#</th>
                                                 <th>Date</th>
                                                 <th>Time</th>
-                                                <th>PAX</th>
-                                                <th>SELECT  <span title="Sum of PAX" class="badge" data-bind="text: total_sum"></span></th><%--, visible: total_sum()>0 --%>
+                                                <th>Unassigned</th>
+                                                <th>SELECT  <span title="Sum of PAX" class="badge" data-bind="text: total_sum"></span></th>
                                             </tr>
 
                                         </thead>
 
                                         <tbody data-bind="foreach: { data: flights, includeDestroyed: true }">
-                                            <%--  <tr data-bind="click: $parent.select ">--%>
                                             <tr data-bind="click: $root.select, css: { mark: selected }">
                                                 <td style="text-align: center">
-                                                    <input type="checkbox" data-bind="checked: selected" <%--data-bind="checkedValue: num, checked: $parent.selectedPeople"--%> /></td>
+                                                    <input type="checkbox" data-bind="checked: selected" /></td>
 
                                                 <td data-bind="text: num"></td>
                                                 <td data-bind="text: date"></td>
@@ -101,30 +122,136 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div data-bind="visible: flights().length == 0">
+                                        There are no unassigned passengers for <span data-bind="text: date_start"></span>for this route. <b>Choose another route or another date.</b>
+                                    </div>
                                 </div>
 
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <button data-bind="enable: selected_flights().length != 0, click: getEarliestFlight" class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row setup-content" id="step-3">
-                        <div class="col-xs-12">
-                            <div class="col-md-12">
-                                <h3>Tour Plan</h3>
-                                <input id="txtDateEnd" data-bind="value: date_end" required="required" type="text" class="date form-control" style="width: 250px" placeholder="Enter Last Date for Tour Plan" />
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
 
-                            </div>
+
+
                         </div>
                     </div>
 
                     <div class="row setup-content" id="step-4">
+
+
+                        <div class="col-md-12">
+
+                            <p>You have <span title="Sum of Selected PAX" style="margin-right:5px" class="badge" data-bind="text: total_sum"></span>passengers to assign to transportation.
+
+                                Eariest flight arrives at: <span style="font-weight: bold" class="label-warning"  data-bind="text: earliest_flight"></span> 
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-info">
+
+                                <div class="panel-heading">
+                                    <i class="fa fa-bus  fa-fw"></i>
+                                    <span>Create  new transportation list</span>
+                                </div>
+                                <%--                                <div class="panel-heading">
+                                    <i class="fa fa-bus  fa-fw"></i>
+                                    <span>Assign all selected </span><span title="Sum of Selected PAX" class="badge" data-bind="text: total_sum"></span>passengers to a new transportation list
+                                </div>--%>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body form-inline">
+
+                                    <div class="form-group ">
+                                        <label class="control-label ">Driver's Details </label>
+                                        <textarea class="form-control" data-bind="value: comments_trans"></textarea>
+                                    </div>
+
+                                    <div class="form-group ">
+                                        <label class="control-label">Pickup Time </label>
+                                        <input required class="form-control conreq" type="time" data-bind="value: time" />
+              
+                                    </div>
+
+
+
+                                    <div class="form-group ">
+                                        <label class="control-label">Accompanied</label>
+
+                                        <select id="ddlGuides" required class="form-control margin-bottom-14 conreq" data-bind="
+    options: guides,
+    optionsText: 'name',
+    optionsValue: 'ID',
+    value: guide_fk_selected,
+    optionsCaption: 'Select Accompanied',
+    valueAllowUnset: true
+">
+                                        </select>
+
+                                    </div>
+                                    <button data-bind="click: addEvent(), enable: count_create()==0" id="btnCreateList" class="btn btn-primary" type="button">Create</button>
+                                </div>
+                            </div>
+
+                            <div data-bind="visible: events().length > 0">
+                                <h4>Transportation lists for the selected date and route:</h4>
+                                <table id="tbl_events" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Route</th>
+                                            <th>Accompanied</th>
+                                            <th>Time</th>
+                                            <th>Passengers</th>
+                                            <th>Assign</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody data-bind="foreach: { data: events, includeDestroyed: true }">
+                                        <tr data-bind="click: $root.select, css: { mark: selected }">
+
+                                            <td data-bind="text: ID"></td>
+                                            <td data-bind="text: date"></td>
+                                            <td data-bind="text: activity_name"></td>
+                                            <td data-bind="text: guide_name"></td>
+                                            <td data-bind="text: time"></td>
+                                            <td data-bind="text: people"></td>
+                                            <td style="text-align: center">
+                                                <input type="button" value="Assign" data-bind="click: $parent.AssignPassengers" class="btn btn-info" style="background-color: #5cb85c" /></td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                         
+                            <div class="form-group">
+                                <button class="btn btn-primary nextBtn btn-lg pull-right" data-bind="disable:event_fk_selected()==0" type="button">Next</button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row setup-content" id="step-5">
                         <div class="col-xs-12">
                             <div class="col-md-12">
-                                <h3>Create List</h3>
-                                <p>Arrival List for <b data-bind="text: date_start"></b>is Ready to print!</p>
+                                <br />
+
+
+                                <p>Arrival List  <b style="margin-right: 5px" data-bind="text: event_fk_selected"></b>is Ready to print.</p>
                                 <iframe data-bind="attr: { src: print_url }" name="frame" id="iframe_print" style="display: none"></iframe>
-                                <button id="btnPrint" class="btn btn-success btn-lg pull-right" type="button">Print List!</button>
+
+                                <a class="btn btn-success btn-lg pull-right" target="_blank" href="EventsTrans.aspx">Print List</a>
+
+
                             </div>
                         </div>
                     </div>
@@ -146,10 +273,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="FooterScripts" runat="Server">
 
     <script src="../scripts/wizard.js"></script>
-    <%--<script src="../scripts/knockout-3.4.0.js"></script>--%>
-    <script src="../views_client/view_list_arrival.js"></script>
+    <script>
+        var DIRECTION = 'in';
+        var _url_print = '../print/ListArrival_Print.aspx?';
+    </script>
+
+    <script src="../views_client/view_transport_wizard.js"></script>
 
     <script>
+
 
 
         //ko.options.useOnlyNativeEvents = true;
@@ -158,12 +290,18 @@
         ko.applyBindings(my.viewModel);
 
 
+
         $(document).ready(function () {
             $("#txtDateStrat").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
             $("#txtDateEnd").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
 
+
             $('#btnPrint').click(function () {
-                frames['frame'].print();
+                //my.viewModel.PNR(pnr);
+                console.log(my.viewModel.print_url());
+
+                // window.open(my.viewModel.print_url());
+                // frames['frame'].print();
             });
 
             //$('[required=required]').each(function (index) {

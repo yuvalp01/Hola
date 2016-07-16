@@ -291,7 +291,7 @@ public partial class pages_Client_Upload : System.Web.UI.Page
     //                cmd.Parameters.AddWithValue("@product_fk", product_fk);
     //                cmd.Parameters.AddWithValue("@persons", client.PAX);
     //                cmd.Parameters.AddWithValue("@price", price);
-    //                cmd.Parameters.AddWithValue("@sale_type", "BIZ");
+    //                cmd.Parameters.AddWithValue("@sale_type", "External");
 
     //                cmd.Parameters.AddWithValue("@date_sale", DateTime.Today);
     //                cmd.Parameters.AddWithValue("@date_update", DateTime.Now);
