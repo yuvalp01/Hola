@@ -11,10 +11,10 @@ function Flight(data) {
     var t = data.time;
     this.time = ko.observable(t.HHmm());
 
-    this.destination = data.destination;
-    this.direction = data.direction;
+    this.destination = ko.observable( data.destination);
+    this.direction = ko.observable(data.direction);
     //this.time_approved = data.time_approved;
-    this.date_update = data.date_update;
+    this.date_update = ko.observable(data.date_update);
 
     this.editable = ko.observable(false);
     this.editBtnClass = ko.observable('btn btn-circle btn-info');
@@ -79,7 +79,13 @@ function FlightViewModel(data) {
             };
 
             $.post(url_flights, new_obj, function (obj_from_server) {
-                new_obj.ID = obj_from_server.ID;
+
+                new_obj.editBtnText = ko.observable('Edit');
+                new_obj.editBtnClass =ko.observable( 'btn btn-circle btn-info');
+                new_obj.editable = ko.observable(false);
+                new_obj.time = ko.observable(self.new_time());
+                new_obj.num = ko.observable(self.new_num());
+                new_obj.date = ko.observable(self.new_date());
                 self_list.unshift(new_obj);
                 self.new_num('');
                 self.new_date('');
@@ -123,13 +129,15 @@ function FlightViewModel(data) {
             url: _url,
             data: item,
             dataType: "json",
-        }).done(function () {
+        }).done(function (result) {
 
             //var guide_fk = item.guide_fk();
             //var match = ko.utils.arrayFirst(self.guides(), function (guide) {
             //    return guide.ID() === guide_fk;
             //});
             //item.guide_name(match.name());
+            //item.time(result.time);
+         
             item.editable(false);
 
             //self.feedback_sale('');

@@ -1,7 +1,12 @@
 ﻿<%@ Page Title="Arrival List" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="List_Arrival.aspx.cs" Inherits="pages_List_Arrival" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-
+    <script>
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+        if (!isChrome) {
+            window.location = "UseChrome.aspx";
+        }
+    </script>
     <link href="../Content/wizard.css" rel="stylesheet" />
     <style>
         tr.mark {
@@ -292,34 +297,39 @@
 
 
         $(document).ready(function () {
-            $("#txtDateStrat").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
-            $("#txtDateEnd").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
-
+            //$("#txtDateStrat").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
+            //$("#txtDateEnd").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
+            $("#txtDateStrat").datepicker({ dateFormat: 'yy-mm-dd'});
+            $("#txtDateEnd").datepicker({ dateFormat: 'yy-mm-dd' });
 
             $('#btnPrint').click(function () {
                 //my.viewModel.PNR(pnr);
                 console.log(my.viewModel.print_url());
 
-                // window.open(my.viewModel.print_url());
-                // frames['frame'].print();
             });
 
-            //$('[required=required]').each(function (index) {
 
-            //    if ($(this).val() == '0' || ($(this).val() == '')) {
-            //        $(this).parent().addClass('has-error');
-            //        //count++;
-            //    }
-            //    else {
-            //        $(this).parent().removeClass('has-error');
-
-            //    }
-            //});
 
 
         });
 
 
+
+        // window.open(my.viewModel.print_url());
+        // frames['frame'].print();
+
+
+        //$('[required=required]').each(function (index) {
+
+        //    if ($(this).val() == '0' || ($(this).val() == '')) {
+        //        $(this).parent().addClass('has-error');
+        //        //count++;
+        //    }
+        //    else {
+        //        $(this).parent().removeClass('has-error');
+
+        //    }
+        //});
     </script>
 
 </asp:Content>

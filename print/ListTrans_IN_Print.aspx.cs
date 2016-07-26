@@ -87,7 +87,8 @@ public partial class ListArrival_Print : System.Web.UI.Page
                                 select a.date_dep).FirstOrDefault();
         DateEnd = lastDepDate.ToString("yyyy-MM-dd");
         var tour_plan = from a in db.Events
-                        where a.date >= dateStart && a.date <= lastDepDate && a.category == "tour"
+                        where a.date >= dateStart && a.date <= lastDepDate && a.category == "tour" && a.canceled==false
+
                         select new EventDTO
                         {
                             ID = a.ID,

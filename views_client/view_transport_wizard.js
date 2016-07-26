@@ -79,7 +79,7 @@ function FlightViewModel(data) {
     //self.date_end = ko.observable();
     self.print_url = ko.observable();
 
-    self.date_start = ko.observable('2016-10-05');
+    self.date_start = ko.observable('2016-08-01');
     self.activity_fk = ko.observable();
     self.time = ko.observable();
     self.guide_fk_selected = ko.observable();
@@ -145,7 +145,11 @@ function FlightViewModel(data) {
         var _url = url_transportlists + '/GetDepartPlan/' + self.event_fk_selected()
         $.getJSON(_url, function (data) {
             var mappedData = $.map(data, function (item) {
-                return new Plan(item, false);
+                var edit_mode = false;
+                if (item.time==undefined) {
+                    edit_mode = true;
+                }
+                return new Plan(item, edit_mode);
             });
             self.plans(mappedData);
         });
@@ -250,6 +254,7 @@ function FlightViewModel(data) {
 
 
     self.getEarliestFlight = function () {
+
         self.earliest_flight( self.selected_flights()[0].time().HHmm())
     };
 
@@ -426,7 +431,7 @@ function FlightViewModel(data) {
                 time: self.time(),
                 activity_fk: self.activity_fk(),
                 guide_fk: self.guide_fk_selected(),
-                comments_trans: self.comments_trans(),
+                comments: self.comments_trans(),
                 category: 'transport'
             };
 
@@ -466,67 +471,3 @@ function FlightViewModel(data) {
 
 
 
-
-
-
-
-//self.addEvent = function () {
-//    debugger;
-//    if (isValidContainer('arrivals_wizard')) {
-
-//        var _event = {
-//            date: self.date_start(),
-//            time: self.time(),
-//            activity_fk: self.activity_fk(),
-//            guide_fk: self.guide_fk(),
-//            comments: self.comments_trans(),
-//            category: 'transport'
-//        };
-
-//        $.post(url_events, _event, function () {
-
-//            //self.product_fk('');
-//            //self.persons(self.persons_max());
-//            //self.sale_comments('');
-
-//        }).done(function () {
-//            // self.feedback_sale('');
-//        })
-//        .fail(function (error) {
-//            // self.feedback_sale(error.responseText);
-//        });
-//    }
-
-//};
-
-
-
-//self.addUpdateEvent = function () {
-//    var url = url_transportlists + "/UpdateEventSaleEventsArr";
-
-//    if (isValidContainer('list_wizard')) {
-
-//        var _details = {
-//            date: self.date_start(),
-//            time: self.time(),
-//            activity_fk: self.activity_fk(),
-//            guide_fk: self.guide_fk(),
-//            comments_trans: self.comments_trans(),
-//            flights: self.selected_flights()
-//        };
-
-//        $.post(url, _details, function (new_event) {
-//            var locaNewEvent = new Event(new_event)
-//            self.events.push(locaNewEvent);
-//            self.event_fk_selected(new_event.ID);
-//            alert(new_event.ID);
-//        }).done(function () {
-//            //  alert('done');
-//            // self.feedback_sale('');
-//        })
-//        .fail(function (error) {
-//            alert(error.responseText);
-//            // self.feedback_sale(error.responseText);
-//        });
-//    }
-//};

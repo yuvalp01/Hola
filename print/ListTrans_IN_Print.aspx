@@ -245,8 +245,13 @@
 
         var d = new Date(data.date);
         this.date = ko.observable(d.yyyymmdd());
-        var t = data.time;
-        this.time = ko.observable(t.HHmm());
+
+        var _t;
+        if (data.time) {
+            _t = data.time.HHmm();
+        }
+        this.time = ko.observable(_t);
+
         this.activity_name = ko.observable(data.activity_name);
         this.guide_name = ko.observable(data.guide_name);
         this.comments = ko.observable(data.comments);

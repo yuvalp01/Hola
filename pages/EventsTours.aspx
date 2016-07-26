@@ -1,6 +1,13 @@
 ﻿<%@ Page Title="Upcoming Tours" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="EventsTours.aspx.cs" Inherits="pages_TourPlan" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
+        <script>
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+        if (!isChrome) {
+            window.location = "UseChrome.aspx";
+        }
+    </script>
     <style>
         
 .loader {

@@ -20,8 +20,10 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <SourceWebPhysicalPath>$(MSBuildThisFileDirectory)</SourceWebPhysicalPath>
     <SourceWebVirtualPath>/HolaShalom</SourceWebVirtualPath>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <SourceWebProject>http://localhost/HolaShalom</SourceWebProject>
-    <SourceWebMetabasePath>/LM/W3SVC/1/ROOT/HolaShalom</SourceWebMetabasePath>
+    <SourceWebProject>
+    </SourceWebProject>
+    <SourceWebMetabasePath>
+    </SourceWebMetabasePath>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -40,12 +42,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <AssemblyAttributes Include="AssemblyVersion">
       <Value>$(AssemblyVersion)</Value>
     </AssemblyAttributes>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HolaAPI\HolaAPI.csproj">
-      <Project>{24697C4E-DE93-4F1D-B5FA-4AE3532D8FDF}</Project>
-      <Name>HolaAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(_WebPublishTargetsPath)\Web\Microsoft.WebSite.Publishing.targets" />
 </Project>

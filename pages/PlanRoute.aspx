@@ -79,7 +79,7 @@
     <script>
         var my = { viewModel: new FlightViewModel() };
         ko.applyBindings(my.viewModel);
-        my.viewModel.event_fk_selected(1);
+        my.viewModel.event_fk_selected(<%=event_fk%>);
         my.viewModel.GetDepartPlan();
 
 
@@ -89,35 +89,6 @@
             $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: -30 });
 
 
-
-
-            //$('body').on('click', '#btnSave', function (e) {
-            //    debugger;
-            //    var xxxx = my.viewModel.error();
-
-            //    if (my.viewModel.error() == '') {
-
-            //        $('#divSuccess').show('fast');
-            //    }
-            //});
-
-
-
-
-            //$('#btnSave').click(function () {
-            //    debugger;
-            //    var xxxx = my.viewModel.error();
-
-            //    if (my.viewModel.error() == '') {
-
-            //        $('#divSuccess').show('fast');
-            //    }
-            //});
-
-
-
-
-            //window.open("../print/ListArrival_Print.aspx");
         });
 
     </script>

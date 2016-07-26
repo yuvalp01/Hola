@@ -152,8 +152,10 @@ function AppEventModel(data) {
     self.UpdateEvent = function (item) {
 
         var _url = url_events + '/UpdateEvent/' + item.ID();
-        //var item = this;
-        //var _url = url_events + '/UpdateEvent/' + this.ID();
+
+        if (item.comments()==null) {
+            item.comments('');
+        }
 
         $.ajax({
             method: "PUT",
@@ -206,86 +208,5 @@ function AppEventModel(data) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-////Not in use:
-
-
-//self.GetArrivalList = function () {
-//    var item = this;
-
-//    var _url = "../print/ListArrival_Print.aspx?";
-//    if (isValidContainer('arrivals_wizard')) {
-
-//        var _details = {
-//            event_fk: item.ID(),
-//            date: item.date(),
-//            time: item.time(),
-//            activity_fk: item.activity_fk(),
-//            guide_fk: item.guide_fk(),
-//            comments: item.comments(),
-
-//        };
-
-
-//        var queryStr = "event_fk=" + item.ID() +
-//                       "&date=" + item.date() +
-//                       "&time=" + item.time() +
-//                       "&activity_fk=" + item.activity_fk() +
-//                       "&guide_fk=" + item.guide_fk() +
-//                       "&comments=" + item.comments();
-
-
-//        $.ajax({
-//            method: "GET",
-//            url: _url + queryStr,
-//            // data: _details,
-//            dataType: "json",
-//        }).done(function (result) {
-
-
-
-//            //self.feedback_sale('');
-//        }).fail(function (error) {
-//            // self.feedback_sale(error.responseText)
-//            alert(error.responseText);
-//        });;
-//    }
-//}
-
-
-//self.GetPrintReqUrl = function () {
-//    var item = this;
-//    var _url = "../print/ListArrival_Print.aspx?";
-//    if (isValidContainer('arrivals_wizard')) {
-
-//        var _details = {
-//            event_fk: item.ID(),
-//            date: item.date(),
-//            time: item.time(),
-//            activity_fk: item.activity_fk(),
-//            guide_fk: item.guide_fk(),
-//            comments: item.comments(),
-
-//        };
-
-
-//        var queryStr = "event_fk=" + item.ID() +
-//                       "&date=" + item.date() +
-//                       "&time=" + item.time() +
-//                       "&activity_fk=" + item.activity_fk() +
-//                       "&guide_fk=" + item.guide_fk() +
-//                       "&comments=" + item.comments();
-//        return _url + queryStr;
-//    }
-//}
 
 

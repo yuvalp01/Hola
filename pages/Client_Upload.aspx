@@ -6,10 +6,10 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">Upload File</h1>
-            <asp:Panel ID="pnlFeedback" runat="server" ClientIDMode="Static" style="display:none" CssClass="alert  alert-dismissable alert-danger">
+            <asp:Panel ID="pnlFeedback" runat="server" ClientIDMode="Static" Style="display: none" CssClass="alert  alert-dismissable alert-danger">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                   <asp:Label ID="lblFeedback" Text="" ClientIDMode="Static"  runat="server" EnableViewState="false" />
-     
+                <asp:Label ID="lblFeedback" Text="" ClientIDMode="Static" runat="server" EnableViewState="false" />
+
 
             </asp:Panel>
             <%--            <div id="message_success" style="display: none" class="alert alert-success alert-dismissable">
@@ -29,12 +29,21 @@
         <div class="well">
 
             <div class="form-group">
-                <label class="control-label">Choose agency*</label>
+                <label class="control-label">Choose Agency*</label>
 
                 <asp:DropDownList ID="ddlAgencies" DataValueField="ID" ClientIDMode="Static" DataTextField="name" runat="server" required="required" CssClass="form-control">
                 </asp:DropDownList>
 
             </div>
+                        <div class="form-group">
+                <label class="control-label">Choose Transportation</label>
+
+                <asp:DropDownList Enabled="false" ID="ddlTransport" DataValueField="ID" ClientIDMode="Static" DataTextField="name" runat="server" required="required" CssClass="form-control">
+                    <asp:ListItem Text="Bus: Airport --> Hotel BCN - return" />
+                </asp:DropDownList>
+
+            </div>
+
             <div class="form-group">
                 <label class="control-label">Select csv File* </label>
                 <asp:LinkButton Style="margin-left: 3px" Text="Download Example" ID="lnkDownloadExample" runat="server" OnClick="lnkDownloadExample_Click" />
@@ -51,11 +60,11 @@
 
             </div>
         </div>
-         
+
 
         <div>
         </div>
-        <asp:GridView ID="GridView1"  CssClass="table table-striped table-bordered table-hover  order-column compact" Width="1400px" Style="table-layout: fixed;" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_OnRowCommand">
+        <asp:GridView ID="GridView1" CssClass="table table-striped table-bordered table-hover  order-column compact" Width="1400px" Style="table-layout: fixed;" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_OnRowCommand">
             <Columns>
 
 
@@ -64,9 +73,8 @@
                         <asp:Button ID="btnInsert" runat="server" CssClass="form-control btn btn-primary" CausesValidation="false" CommandName="InsertClient"
                             Text="Insert"
                             CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("phone")+ "~" +Eval("date_arr")+ "~" +Eval("num_arr")+ "~" +Eval("PAX")+ "~" +Eval("date_dep")+ "~" +Eval("num_dep") + "~" +Eval("comments") %>' />
-<%--                            CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("PAX")+ "~" +Eval("num_arr")+ "~" +Eval("date_arr")+ "~" +Eval("num_dep")+ "~" +Eval("date_dep")+ "~" +Eval("phone") + "~" +Eval("comments") %>' />--%>
-                   
-                         </ItemTemplate>
+                        <%--                            CommandArgument='<%#Eval("PNR") + "~" +Eval("names")+ "~" +Eval("PAX")+ "~" +Eval("num_arr")+ "~" +Eval("date_arr")+ "~" +Eval("num_dep")+ "~" +Eval("date_dep")+ "~" +Eval("phone") + "~" +Eval("comments") %>' />--%>
+                    </ItemTemplate>
                 </asp:TemplateField>
 
 

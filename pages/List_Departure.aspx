@@ -1,7 +1,12 @@
 ﻿<%@ Page Title="Departure List" Language="C#" MasterPageFile="~/MasterHola.master" AutoEventWireup="true" CodeFile="List_Departure.aspx.cs" Inherits="pages_List_Departure" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-
+        <script>
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+        if (!isChrome) {
+            window.location = "UseChrome.aspx";
+        }
+    </script>
     <link href="../Content/wizard.css" rel="stylesheet" />
     <style>
         tr.mark {
@@ -115,7 +120,7 @@
                                             <tr data-bind="click: $root.select, css: { mark: selected }">
                                                 <td style="text-align: center">
                                                     <div class="form-group">
-                                                        <input required="required" type="checkbox" data-bind="checked: selected" />
+                                                        <input  type="checkbox" data-bind="checked: selected" />
                                                     </div>
                                                 </td>
 
@@ -302,10 +307,7 @@
                                 <iframe data-bind="attr: { src: print_url }" name="frame" id="iframe_print" style="display: none"></iframe>
 
 
-
-
-                                <%--<button id="btnPrint" class="btn btn-success btn-lg pull-right" type="button">Print List!</button>--%>
-                                <a class="btn btn-success btn-lg pull-right" target="_blank" href="http://localhost/HolaShalom/pages/EventsTrans.aspx">Print List</a>
+                                <a class="btn btn-success btn-lg pull-right" target="_blank" href="EventsTrans.aspx">Print List</a>
 
 
                             </div>

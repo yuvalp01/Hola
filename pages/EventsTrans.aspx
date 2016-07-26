@@ -69,6 +69,7 @@
 
                     <button data-bind="click: $parent.edit_mode, text: editBtnText, css: editBtnClass"></button>
                     <button class="btn btn-danger btn-circle" title="Delete Plan" data-bind="click: $parent.CancelEvent">Del</button>
+
                     <a class="btn btn-print btn-circle" title="Print" target="_blank" data-bind="visible: people() > 0 && time, attr: { href: print_url }">Print</a>
 
                 </td>
@@ -76,22 +77,28 @@
 
                 <td data-bind="text: date"></td>
                 <td>
-                    <!-- ko if: !time -->
-        <span data-bind="text: time "></span>
+
+                    <!-- ko if: time()==undefined -->
+                    <span style="color: red" title="Please complete the plan of the list or delete and create a new one">missing!</span>
                     <!-- /ko -->
                     <!-- ko if: time -->
                     <span data-bind="text: time, visible: !(editable()) "></span>
                     <input class="form-control" type="time" data-bind="value: time, visible: editable" style="width: 120px" />
-                       <!-- /ko -->
+                    <!-- /ko -->
                 </td>
                 <td>
                     <span data-bind="text: activity_name"></span>
-                    <a class="btn btn-warning btn-circle" title="Plan Route" href="PlanRoute.aspx"  data-bind=" visible: direction() == 'OUT'">Plan</a>
+                    <a class="btn btn-warning btn-circle" title="Plan Route" data-bind="visible: direction() == 'OUT', attr: { href: 'PlanRoute.aspx?event_fk=' + ID()}" href="PlanRoute.aspx"  >Plan</a>
 
                 </td>
-                <td data-bind="text: people"></td>
-
-
+                <td >
+                    <!-- ko if:people()==0 -->
+                    <span style="color: red; font-weight: bold" data-bind="text:people" title="List without passengers cannot be printed" ></span>
+                    <!-- /ko-->
+                    <!-- ko if:people()>0 -->
+                    <span  data-bind="text:people" ></span>
+                    <!-- /ko-->
+                </td>
                 <td>
                     <span data-bind="text: guide_name, visible: !(editable())"></span>
 
@@ -139,23 +146,9 @@
         ko.applyBindings(my.viewModel);
 
         $(document).ready(function () {
-            $(".date").datepicker({ dateFormat: 'yy-mm-dd', minDate: -30 });
-
             //my.viewModel.GetPrintReqUrl();
             //var _url = "../print/ListArrival_Print.aspx?";
-            //if (isValidContainer('arrivals_wizard')) {
 
-            //    var _details = {
-            //        event_fk: item.ID(),
-            //        date: item.date(),
-            //        time: item.time(),
-            //        activity_fk: item.activity_fk(),
-            //        guide_fk: item.guide_fk(),
-            //        comments: item.comments(),
-
-            //    };
-
-            //window.open("../print/ListArrival_Print.aspx");
         });
 
     </script>

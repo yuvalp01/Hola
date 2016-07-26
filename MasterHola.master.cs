@@ -13,7 +13,11 @@ public partial class MasterHola : System.Web.UI.MasterPage
         if (!IsPostBack)
         {
             favicon_link.Href = "~/"+ ConfigurationManager.AppSettings["favicon"];
-            lblEnvironment.Text = ConfigurationManager.AppSettings["environment"];
+            string environment = ConfigurationManager.AppSettings["environment"];
+            if (environment!="PROD")
+            {
+                lblEnvironment.Text = environment;
+            }
 
         }
     }
